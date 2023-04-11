@@ -89,14 +89,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.4"
-  file_saver:
-    dependency: "direct main"
-    description:
-      name: file_saver
-      sha256: "0de62b766ebbd491466b160909fce9f30d2c0b2ba9e062871dbda2e677e5b33b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -120,22 +112,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  http:
-    dependency: transitive
-    description:
-      name: http
-      sha256: "6aa2946395183537c8b880962d935877325d6a09a2867c3970c05c0fed6ac482"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.13.5"
-  http_parser:
-    dependency: transitive
-    description:
-      name: http_parser
-      sha256: "2aa08ce0341cc9b354a498388e30986515406668dbcc4f7c950c3e715496693b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.2"
   js:
     dependency: transitive
     description:
