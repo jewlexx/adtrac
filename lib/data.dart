@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 // import 'package:file_saver/file_saver.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:cross_file/cross_file.dart';
 import "package:shared_preferences/shared_preferences.dart";
 
 class VapeCount {
