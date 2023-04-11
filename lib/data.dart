@@ -17,8 +17,7 @@ class VapeCount {
     String currentDate = VapeCount.date();
 
     if (date == null || date != currentDate) {
-      await instance.setString("date", currentDate);
-      await instance.setInt("count", 0);
+      await instance.setInt(currentDate, 0);
     }
 
     return value;
