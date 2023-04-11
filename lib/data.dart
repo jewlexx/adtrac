@@ -1,4 +1,4 @@
-import "package:flutter/material.dart";
+import 'package:share_plus/share_plus.dart';
 import "package:shared_preferences/shared_preferences.dart";
 
 class VapeCount {
@@ -40,5 +40,24 @@ class VapeCount {
 
   set count(int newCount) {
     instance.setInt("count", newCount);
+  }
+}
+
+class CounterExport {
+  Map<String, Object> counts = {};
+
+  CounterExport(SharedPreferences? prefs) {
+    Set<String> keys = prefs!.getKeys();
+
+    for (String key in keys) {
+      Object? count = prefs.get(key);
+      counts[key] = count!;
+    }
+  }
+
+  void export() {
+    String jsonString = counts.toString();
+
+    Share.share(jsonString);
   }
 }
