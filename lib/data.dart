@@ -17,12 +17,9 @@ class VapeCount {
 
     // Checks that the instance has not already been initialized
     // and that the instance is not in the process of being initialized.
-    String? date = instance.getString("date");
     String currentDate = VapeCount.date();
 
-    if (date == null ||
-        date != currentDate ||
-        instance.getInt(currentDate) == null) {
+    if (instance.getInt(currentDate) == null) {
       await instance.setInt(currentDate, 0);
     }
 
