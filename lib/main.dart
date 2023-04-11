@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
-import "package:vapetracker/data.dart";
+import "package:vapetracker/historical.dart";
+
+import "counter.dart";
 
 void main() {
   runApp(const MyApp());
@@ -14,10 +16,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Flutter Demo",
-      theme: ThemeData(
-        primarySwatch: Colors.pink,
-        useMaterial3: true,
-      ),
+      theme: ThemeData(useMaterial3: true),
+      darkTheme: ThemeData(useMaterial3: true, brightness: Brightness.dark),
+      themeMode: ThemeMode.system,
       home: const MyHomePage(title: "Vape Tracker"),
     );
   }
@@ -33,58 +34,45 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final Future<VapeCount> _counter = VapeCount.init();
-
-  void _incrementCounter() {
-    setState(() {
-      _counter.then((value) => value.increment());
-    });
-  }
+  int selectedPage = 0;
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _counter,
-        builder: (BuildContext ctx, AsyncSnapshot<VapeCount> snapshot) {
-          if (snapshot.data == null) {
-            return Scaffold(
-              appBar: AppBar(
-                title: Text(widget.title),
-              ),
-              body: const Center(child: Text("Loading Data...")),
-            );
-          }
-
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(widget.title),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Row(
+        children: [
+          SafeArea(
+            child: NavigationRail(
+              extended: false,
+              destinations: const [
+                NavigationRailDestination(
+                  icon: Icon(Icons.numbers),
+                  label: Text('Daily Hits'),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.date_range),
+                  label: Text('Historical Data'),
+                ),
+              ],
+              selectedIndex: selectedPage,
+              onDestinationSelected: (value) {
+                setState(() => selectedPage = value);
+              },
             ),
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Text(
-                    "Hits Today:",
-                  ),
-                  Text(
-                    "${snapshot.data?.count}",
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                ],
-              ),
+          ),
+          Expanded(
+            child: Container(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: selectedPage == 0
+                  ? const CounterPage()
+                  : const HistoricalPage(),
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: _incrementCounter,
-              tooltip: "Increment",
-              child: const Icon(Icons.add),
-            ),
-            persistentFooterButtons: [
-              IconButton(
-                onPressed: CounterExport(snapshot.data?.instance).export,
-                icon: const Icon(Icons.save),
-              ),
-            ],
-          );
-        });
+          )
+        ],
+      ),
+    );
   }
 }
