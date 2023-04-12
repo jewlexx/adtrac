@@ -67,11 +67,11 @@ class _MyHomePageState extends State<MyHomePage> {
               items: const [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.numbers),
-                  label: 'Daily Hits',
+                  label: 'Today\'s Hits',
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.calendar_today),
-                  label: 'Historical Data',
+                  label: 'Past Hits',
                 ),
               ],
               onTap: (value) => setState(() => selectedPage = value),
