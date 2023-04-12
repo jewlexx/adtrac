@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'data.dart';
+
 class HistoricalPage extends StatefulWidget {
-  const HistoricalPage({super.key});
+  final VapeCount counter;
+
+  const HistoricalPage({super.key, required this.counter});
 
   @override
   State<HistoricalPage> createState() => _HistoricalPageState();

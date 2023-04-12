@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:vapetracker/historical.dart";
 
 import "counter.dart";
+import "data.dart";
 
 void main() {
   runApp(const MyApp());
@@ -34,45 +35,61 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final Future<VapeCount> _vapeCount = VapeCount.init();
   int selectedPage = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Row(
-        children: [
-          SafeArea(
-            child: NavigationRail(
-              extended: false,
-              destinations: const [
-                NavigationRailDestination(
-                  icon: Icon(Icons.numbers),
-                  label: Text('Daily Hits'),
+    return FutureBuilder(
+        future: _vapeCount,
+        builder: (BuildContext ctx, AsyncSnapshot<VapeCount> snapshot) {
+          if (snapshot.data == null) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(widget.title),
+              ),
+              body: const Center(child: Text("Loading Data...")),
+            );
+          }
+
+          VapeCount counter = snapshot.data!;
+
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(widget.title),
+            ),
+            body: Row(
+              children: [
+                SafeArea(
+                  child: NavigationRail(
+                    extended: false,
+                    destinations: const [
+                      NavigationRailDestination(
+                        icon: Icon(Icons.numbers),
+                        label: Text('Daily Hits'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.date_range),
+                        label: Text('Historical Data'),
+                      ),
+                    ],
+                    selectedIndex: selectedPage,
+                    onDestinationSelected: (value) {
+                      setState(() => selectedPage = value);
+                    },
+                  ),
                 ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.date_range),
-                  label: Text('Historical Data'),
-                ),
+                Expanded(
+                  child: Container(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    child: selectedPage == 0
+                        ? CounterPage(counter: counter)
+                        : HistoricalPage(counter: counter),
+                  ),
+                )
               ],
-              selectedIndex: selectedPage,
-              onDestinationSelected: (value) {
-                setState(() => selectedPage = value);
-              },
             ),
-          ),
-          Expanded(
-            child: Container(
-              color: Theme.of(context).colorScheme.primaryContainer,
-              child: selectedPage == 0
-                  ? const CounterPage()
-                  : const HistoricalPage(),
-            ),
-          )
-        ],
-      ),
-    );
+          );
+        });
   }
 }
