@@ -36,7 +36,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final Future<VapeCount> _vapeCount = VapeCount.init();
+  int? lastSelectedPage;
   int selectedPage = 0;
+
+  void setPage(int page) {
+    lastSelectedPage = selectedPage;
+    selectedPage = page;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,34 +60,47 @@ class _MyHomePageState extends State<MyHomePage> {
 
           VapeCount counter = snapshot.data!;
 
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(widget.title),
+          return WillPopScope(
+            onWillPop: () async {
+              if (lastSelectedPage == null) {
+                return true;
+              } else {
+                setState(() {
+                  selectedPage = lastSelectedPage!;
+                  lastSelectedPage = null;
+                });
+                return false;
+              }
+            },
+            child: Scaffold(
+              appBar: AppBar(
+                title: Text(widget.title),
+              ),
+              body: selectedPage == 0
+                  ? CounterPage(counter: counter)
+                  : HistoricalPage(counter: counter),
+              bottomNavigationBar: BottomNavigationBar(
+                currentIndex: selectedPage,
+                type: BottomNavigationBarType.fixed,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.numbers),
+                    label: 'Today\'s Hits',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.calendar_today),
+                    label: 'Past Hits',
+                  ),
+                ],
+                onTap: (value) => setState(() => setPage(value)),
+              ),
+              floatingActionButton: selectedPage == 1
+                  ? FloatingActionButton(
+                      onPressed: counter.export,
+                      child: const Icon(Icons.share),
+                    )
+                  : null,
             ),
-            body: selectedPage == 0
-                ? CounterPage(counter: counter)
-                : HistoricalPage(counter: counter),
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: selectedPage,
-              type: BottomNavigationBarType.fixed,
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.numbers),
-                  label: 'Today\'s Hits',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.calendar_today),
-                  label: 'Past Hits',
-                ),
-              ],
-              onTap: (value) => setState(() => selectedPage = value),
-            ),
-            floatingActionButton: selectedPage == 1
-                ? FloatingActionButton(
-                    onPressed: counter.export,
-                    child: const Icon(Icons.share),
-                  )
-                : null,
           );
         });
   }
