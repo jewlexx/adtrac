@@ -58,36 +58,23 @@ class _MyHomePageState extends State<MyHomePage> {
             appBar: AppBar(
               title: Text(widget.title),
             ),
-            body: Row(
-              children: [
-                SafeArea(
-                  child: NavigationRail(
-                    extended: false,
-                    destinations: const [
-                      NavigationRailDestination(
-                        icon: Icon(Icons.numbers),
-                        label: Text('Daily Hits'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.date_range),
-                        label: Text('Historical Data'),
-                      ),
-                    ],
-                    selectedIndex: selectedPage,
-                    onDestinationSelected: (value) {
-                      setState(() => selectedPage = value);
-                    },
-                  ),
+            body: selectedPage == 0
+                ? CounterPage(counter: counter)
+                : HistoricalPage(counter: counter),
+            bottomNavigationBar: BottomNavigationBar(
+              currentIndex: selectedPage,
+              type: BottomNavigationBarType.fixed,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.numbers),
+                  label: 'Daily Hits',
                 ),
-                Expanded(
-                  child: Container(
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                    child: selectedPage == 0
-                        ? CounterPage(counter: counter)
-                        : HistoricalPage(counter: counter),
-                  ),
-                )
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.calendar_today),
+                  label: 'Historical Data',
+                ),
               ],
+              onTap: (value) => setState(() => selectedPage = value),
             ),
           );
         });
