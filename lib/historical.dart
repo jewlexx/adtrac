@@ -13,20 +13,23 @@ class HistoricalPage extends StatefulWidget {
 }
 
 class _HistoricalPageState extends State<HistoricalPage> {
+  late Set<String> _allDays = super.widget.counter.instance.getKeys();
+
   void deleteDay(String day) {
-    super.widget.counter.instance.remove(day);
+    setState(() {
+      super.widget.counter.instance.remove(day);
+      _allDays = super.widget.counter.instance.getKeys();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     VapeCount counter = super.widget.counter;
 
-    Set<String> allDays = counter.instance.getKeys();
-
     return Center(
       child: ListView(
         children: [
-          for (String day in allDays)
+          for (String day in _allDays)
             ListTile(
               leading: IconButton(
                 onPressed: () => deleteDay(day),
