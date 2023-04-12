@@ -13,13 +13,22 @@ class HistoricalPage extends StatefulWidget {
 }
 
 class _HistoricalPageState extends State<HistoricalPage> {
-  late Set<String> _allDays = super.widget.counter.instance.getKeys();
+  late List<String> _allDays = getKeys();
 
   void deleteDay(String day) {
     setState(() {
       super.widget.counter.instance.remove(day);
-      _allDays = super.widget.counter.instance.getKeys();
+      updateKeys();
     });
+  }
+
+  List<String> getKeys() {
+    Set<String> keys = super.widget.counter.instance.getKeys();
+    return keys.toList().reversed.toList();
+  }
+
+  void updateKeys() {
+    _allDays = getKeys();
   }
 
   @override
