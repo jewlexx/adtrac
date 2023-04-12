@@ -50,6 +50,11 @@ class VapeCount {
   set count(int newCount) {
     instance.setInt(VapeCount.date(), newCount);
   }
+
+  void export() {
+    CounterExport export = CounterExport(instance);
+    export.share();
+  }
 }
 
 class CounterExport {
@@ -64,24 +69,12 @@ class CounterExport {
     }
   }
 
-  void export() async {
+  void share() async {
     String jsonString = json.encode(counts);
     Uint8List bytes = stringToBytes(jsonString);
     XFile file = XFile.fromData(bytes, mimeType: "application/json");
 
     await Share.shareXFiles([file]);
-
-    // if (Platform.isAndroid || Platform.isIOS) {
-    //   FileSaver.instance.saveAs(
-    //     name: "data_historical",
-    //     bytes: bytes,
-    //     ext: "json",
-    //     mimeType: MimeType.json,
-    //   );
-    // } else {
-    //   FileSaver.instance
-    //       .saveFile(name: "data_historical", bytes: bytes, ext: "json");
-    // }
   }
 }
 

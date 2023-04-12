@@ -76,6 +76,12 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
               onTap: (value) => setState(() => selectedPage = value),
             ),
+            floatingActionButton: selectedPage == 1
+                ? FloatingActionButton(
+                    onPressed: counter.export,
+                    child: const Icon(Icons.share),
+                  )
+                : null,
           );
         });
   }
