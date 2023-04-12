@@ -36,8 +36,15 @@ class VapeCount {
   }
 
   int get count {
-    int? count = instance.getInt(VapeCount.date());
-    return count!;
+    String date = VapeCount.date();
+    int? count = instance.getInt(date);
+
+    if (count == null) {
+      instance.setInt(date, 0);
+      return 0;
+    }
+
+    return count;
   }
 
   set count(int newCount) {
