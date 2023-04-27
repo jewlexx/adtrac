@@ -1,4 +1,4 @@
-# vapetracker
+# Addiction Tracker
 
 A new Flutter project.
 

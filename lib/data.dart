@@ -5,19 +5,19 @@ import 'dart:typed_data';
 import 'package:share_plus/share_plus.dart';
 import "package:shared_preferences/shared_preferences.dart";
 
-class VapeCount {
+class Counter {
   late SharedPreferences instance;
   bool readying = false;
   // VapeCount({this.instance});
 
-  static Future<VapeCount> init() async {
+  static Future<Counter> init() async {
     SharedPreferences instance = await SharedPreferences.getInstance();
-    VapeCount value = VapeCount();
+    Counter value = Counter();
     value.instance = instance;
 
     // Checks that the instance has not already been initialized
     // and that the instance is not in the process of being initialized.
-    String currentDate = VapeCount.date();
+    String currentDate = Counter.date();
 
     if (instance.getInt(currentDate) == null) {
       await instance.setInt(currentDate, 0);
@@ -36,7 +36,7 @@ class VapeCount {
   }
 
   int get count {
-    String date = VapeCount.date();
+    String date = Counter.date();
     int? count = instance.getInt(date);
 
     if (count == null) {
@@ -48,7 +48,7 @@ class VapeCount {
   }
 
   set count(int newCount) {
-    instance.setInt(VapeCount.date(), newCount);
+    instance.setInt(Counter.date(), newCount);
   }
 
   void export() {

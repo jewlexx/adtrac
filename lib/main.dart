@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
-import "package:vapetracker/historical.dart";
 
+import "historical.dart";
 import "counter.dart";
 import "data.dart";
 
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(useMaterial3: true),
       darkTheme: ThemeData(useMaterial3: true, brightness: Brightness.dark),
       themeMode: ThemeMode.system,
-      home: const MyHomePage(title: "Vape Tracker"),
+      home: const MyHomePage(title: "Addiction Tracker"),
     );
   }
 }
@@ -35,7 +35,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final Future<VapeCount> _vapeCount = VapeCount.init();
+  final Future<Counter> _vapeCount = Counter.init();
   int? lastSelectedPage;
   int selectedPage = 0;
 
@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: _vapeCount,
-        builder: (BuildContext ctx, AsyncSnapshot<VapeCount> snapshot) {
+        builder: (BuildContext ctx, AsyncSnapshot<Counter> snapshot) {
           if (snapshot.data == null) {
             return Scaffold(
               appBar: AppBar(
@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
             );
           }
 
-          VapeCount counter = snapshot.data!;
+          Counter counter = snapshot.data!;
 
           return WillPopScope(
             onWillPop: () async {

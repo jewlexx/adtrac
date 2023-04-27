@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'data.dart';
 
 class CounterPage extends StatefulWidget {
-  final VapeCount counter;
+  final Counter counter;
 
   const CounterPage({super.key, required this.counter});
 
@@ -18,7 +18,7 @@ class _CounterPageState extends State<CounterPage> {
 
   @override
   Widget build(BuildContext context) {
-    VapeCount counter = super.widget.counter;
+    Counter counter = super.widget.counter;
 
     return Center(
       child: Column(

@@ -1,6 +1,6 @@
 {
-    "name": "vapetracker",
-    "short_name": "vapetracker",
+    "name": "Addiction Tracker",
+    "short_name": "Addiction Tracker",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

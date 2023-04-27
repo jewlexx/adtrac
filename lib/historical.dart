@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'data.dart';
 
 class HistoricalPage extends StatefulWidget {
-  final VapeCount counter;
+  final Counter counter;
 
   const HistoricalPage({super.key, required this.counter});
 
@@ -33,7 +33,7 @@ class _HistoricalPageState extends State<HistoricalPage> {
 
   @override
   Widget build(BuildContext context) {
-    VapeCount counter = super.widget.counter;
+    Counter counter = super.widget.counter;
 
     return Center(
       child: ListView(
