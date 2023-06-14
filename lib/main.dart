@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "common.dart";
 import "historical.dart";
 import "counter.dart";
 import "data.dart";
@@ -20,21 +21,19 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(useMaterial3: true),
       darkTheme: ThemeData(useMaterial3: true, brightness: Brightness.dark),
       themeMode: ThemeMode.system,
-      home: const MyHomePage(title: "Addiction Tracker"),
+      home: const Wrapper(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class Wrapper extends StatefulWidget {
+  const Wrapper({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<Wrapper> createState() => _WrapperState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _WrapperState extends State<Wrapper> {
   final Future<Counter> _vapeCount = Counter.init();
   int? lastSelectedPage;
   int selectedPage = 0;
@@ -52,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
           if (snapshot.data == null) {
             return Scaffold(
               appBar: AppBar(
-                title: Text(widget.title),
+                title: const Text(title),
               ),
               body: const Center(child: Text("Loading Data...")),
             );
@@ -73,12 +72,13 @@ class _MyHomePageState extends State<MyHomePage> {
               }
             },
             child: Scaffold(
-              appBar: AppBar(
-                title: Text(widget.title),
-              ),
-              body: selectedPage == 0
-                  ? CounterPage(counter: counter)
-                  : HistoricalPage(counter: counter),
+              // appBar: AppBar(
+              //   title: const Text(title),
+              // ),
+              body: CounterPage(counter: counter),
+              // selectedPage == 0
+              //     ? CounterPage(counter: counter)
+              //     : HistoricalPage(counter: counter),
               bottomNavigationBar: BottomNavigationBar(
                 currentIndex: selectedPage,
                 type: BottomNavigationBarType.fixed,
@@ -92,7 +92,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     label: 'Past Hits',
                   ),
                 ],
-                onTap: (value) => setState(() => setPage(value)),
+                onTap: (value) => setState(
+                  () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const HistoricalPage(),
+                      ),
+                    );
+                  },
+                ),
               ),
               floatingActionButton: selectedPage == 1
                   ? FloatingActionButton(
