@@ -1,43 +1,56 @@
 import 'package:flutter/material.dart';
 
+import 'common.dart';
 import 'data.dart';
 
 class CounterPage extends StatefulWidget {
-  final Counter counter;
-
-  const CounterPage({super.key, required this.counter});
+  const CounterPage({super.key});
 
   @override
   State<CounterPage> createState() => _CounterPageState();
 }
 
 class _CounterPageState extends State<CounterPage> {
-  void _incrementCounter() {
-    setState(() => super.widget.counter.increment());
-  }
+  final Future<Counter> _vapeCount = Counter.init();
 
   @override
   Widget build(BuildContext context) {
-    Counter counter = super.widget.counter;
+    return FutureBuilder(
+        future: _vapeCount,
+        builder: (BuildContext ctx, AsyncSnapshot<Counter> snapshot) {
+          if (snapshot.data == null) {
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text(title),
+              ),
+              body: const Center(child: Text("Loading Data...")),
+            );
+          }
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Text(
-            "Hits Today:",
-          ),
-          Text(
-            "${counter.count}",
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-          ElevatedButton.icon(
-            onPressed: _incrementCounter,
-            icon: const Icon(Icons.add),
-            label: const Text("Add Hit"),
-          )
-        ],
-      ),
-    );
+          var counter = snapshot.data!;
+
+          return Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text(
+                    "Hits Today:",
+                  ),
+                  Text(
+                    "${counter.count}",
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () => setState(() => counter.increment()),
+                    icon: const Icon(Icons.add),
+                    label: const Text("Add Hit"),
+                  )
+                ],
+              ),
+            ),
+            bottomNavigationBar: const NavigationBottomBar(selectedPage: 0),
+          );
+        });
   }
 }

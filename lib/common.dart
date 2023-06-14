@@ -1,3 +1,4 @@
+import 'package:addictiontracker/counter.dart';
 import 'package:flutter/material.dart';
 
 import 'historical.dart';
@@ -34,7 +35,16 @@ class _NavigationBottomBarState extends State<NavigationBottomBar> {
           if (value != super.widget.selectedPage) {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => const HistoricalPage(),
+                builder: (context) {
+                  switch (value) {
+                    case 1:
+                      return const HistoricalPage();
+                    // Generally will trigger when value is 0,
+                    // But in bug cases we don't necessarily want to exit
+                    default:
+                      return const CounterPage();
+                  }
+                },
               ),
             );
           }
