@@ -23,7 +23,7 @@ class _CounterPageState extends State<CounterPage> {
               appBar: AppBar(
                 title: const Text(title),
               ),
-              body: const Center(child: Text("Loading Data...")),
+              body: const Center(child: Text('Loading Data...')),
             );
           }
 
@@ -35,7 +35,7 @@ class _CounterPageState extends State<CounterPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const Text(
-                    "Hits Today:",
+                    'Hits Today:',
                   ),
                   Text(
                     "${counter.count}",

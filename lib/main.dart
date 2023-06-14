@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import "counter.dart";
+import "historical.dart";
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(useMaterial3: true),
       darkTheme: ThemeData(useMaterial3: true, brightness: Brightness.dark),
       themeMode: ThemeMode.system,
-      home: const CounterPage(),
+      routes: {
+        "/": (context) => const CounterPage(),
+        "/historical": (context) => const HistoricalPage(),
+      },
     );
   }
 }
