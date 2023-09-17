@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
 
+import 'auth.dart' show signInWithGoogle;
 import 'common.dart';
 import 'data.dart';
 
@@ -12,16 +13,29 @@ class CounterPage extends StatefulWidget {
 }
 
 class _CounterPageState extends State<CounterPage> {
+  var uid = FirebaseAuth.instance.currentUser?.uid;
+
   @override
   Widget build(BuildContext context) {
-    var uid = FirebaseAuth.instance.currentUser?.uid;
-
-    if (!uid) {
-      // TODO: Login page;
-      return null;
+    if (uid == null) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextButton(
+                onPressed: () => signInWithGoogle()
+                    .then((cred) => setState(() => uid = cred.user?.uid)),
+                child: const Text("Sign In With Google"),
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: const NavigationBottomBar(selectedPage: 0),
+      );
     }
 
-    var counter = Counter(uid);
+    var counter = Counter(uid!);
 
     return FutureBuilder<int>(
         future: counter.count,
