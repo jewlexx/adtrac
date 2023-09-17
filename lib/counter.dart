@@ -24,8 +24,10 @@ class _CounterPageState extends State<CounterPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               TextButton(
-                onPressed: () => signInWithGoogle()
-                    .then((cred) => setState(() => uid = cred.user?.uid)),
+                onPressed: () => signInWithGoogle().then((cred) {
+                  print("Signed in");
+                  setState(() => uid = cred.user?.uid);
+                }),
                 child: const Text("Sign In With Google"),
               ),
             ],
