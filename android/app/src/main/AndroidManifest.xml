@@ -1,7 +1,6 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jewelexx.addictiontracker">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="Addiction Tracker"
+        android:label="vapetracker"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
