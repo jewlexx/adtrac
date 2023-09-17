@@ -70,7 +70,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '640269433885',
     projectId: 'addictiontracker-2f028',
     storageBucket: 'addictiontracker-2f028.appspot.com',
-    iosClientId: '640269433885-ogvkjbsnkbdoplr2vlpd2qpam6s38pe9.apps.googleusercontent.com',
+    iosClientId:
+        '640269433885-ogvkjbsnkbdoplr2vlpd2qpam6s38pe9.apps.googleusercontent.com',
     iosBundleId: 'com.jewelexx.addictiontracker',
   );
 }

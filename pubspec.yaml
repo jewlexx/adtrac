@@ -1,11 +1,11 @@
 name: addictiontracker
 description: Track addictions each day
-publish_to: 'none'
+publish_to: "none"
 
 version: 1.0.1+1
 
 environment:
-  sdk: '>=2.19.6 <3.0.0'
+  sdk: ">=2.19.6 <3.0.0"
 
 dependencies:
   flutter:
@@ -17,6 +17,7 @@ dependencies:
   firebase_core: ^2.15.1
   firebase_analytics: ^10.4.5
   cloud_firestore: ^4.9.1
+  firebase_auth: ^4.9.0
 
 dev_dependencies:
   flutter_test:
