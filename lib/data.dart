@@ -20,17 +20,19 @@ class Counter {
     int? current = doc.get(date());
 
     if (current == null) {
-      setCount(0);
+      await setCount(0);
       return 0;
     } else {
       return current;
     }
   }
 
-  void increment() {}
+  Future<void> increment() async {
+    setCount((await count) + 1);
+  }
 
-  void setCount(int value) {
-    _doc.update({date(): value});
+  Future<void> setCount(int value) {
+    return _doc.update({date(): value});
   }
 
   DocumentReference<Map<String, dynamic>> get _doc {
