@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:640269433885:android:1f1a46e250ac6643249af4",
+        "mobilesdk_app_id": "1:640269433885:android:883aff6cd2e118fb249af4",
         "android_client_info": {
-          "package_name": "com.jewelexx.addictiontracker"
+          "package_name": "com.jewelexx.vapetracker"
         }
       },
       "oauth_client": [
@@ -29,6 +29,13 @@
             {
               "client_id": "640269433885-k5i16esafrq392p2r1599u2o06ald3js.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "640269433885-ogvkjbsnkbdoplr2vlpd2qpam6s38pe9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jewelexx.addictiontracker"
+              }
             }
           ]
         }

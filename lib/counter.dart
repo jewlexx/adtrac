@@ -27,7 +27,7 @@ class _CounterPageState extends State<CounterPage> {
                 onPressed: () => signInWithGoogle().then((cred) {
                   print("Signed in");
                   setState(() => uid = cred.user?.uid);
-                }),
+                }).catchError(print),
                 child: const Text("Sign In With Google"),
               ),
             ],
