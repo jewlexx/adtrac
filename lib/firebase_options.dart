@@ -58,7 +58,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAKt1eAuhdfLMmImpEF8Q6K0ec1Z37C-ZI',
-    appId: '1:640269433885:android:1f1a46e250ac6643249af4',
+    appId: '1:640269433885:android:883aff6cd2e118fb249af4',
     messagingSenderId: '640269433885',
     projectId: 'addictiontracker-2f028',
     storageBucket: 'addictiontracker-2f028.appspot.com',
@@ -66,12 +66,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCF2GuKIHnPNWkMgSv2FR6Px10sxJYpWeo',
-    appId: '1:640269433885:ios:129a24f9ec7cb211249af4',
+    appId: '1:640269433885:ios:26873f687117c919249af4',
     messagingSenderId: '640269433885',
     projectId: 'addictiontracker-2f028',
     storageBucket: 'addictiontracker-2f028.appspot.com',
-    iosClientId:
-        '640269433885-ogvkjbsnkbdoplr2vlpd2qpam6s38pe9.apps.googleusercontent.com',
-    iosBundleId: 'com.jewelexx.addictiontracker',
+    iosClientId: '640269433885-1e5sv9ds7ndf4cv44m3g0c8k0s6jio10.apps.googleusercontent.com',
+    iosBundleId: 'com.jewelexx.vapetracker',
   );
 }
