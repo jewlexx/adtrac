@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "640269433885-kceub8mltee0k6613pls05g8fv4mtgn9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jewelexx.vapetracker",
+            "certificate_hash": "cf60ad32a22a49e761ab77a2aca6a2e98297df58"
+          }
+        },
+        {
           "client_id": "640269433885-k5i16esafrq392p2r1599u2o06ald3js.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -31,10 +39,10 @@
               "client_type": 3
             },
             {
-              "client_id": "640269433885-ogvkjbsnkbdoplr2vlpd2qpam6s38pe9.apps.googleusercontent.com",
+              "client_id": "640269433885-1e5sv9ds7ndf4cv44m3g0c8k0s6jio10.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.jewelexx.addictiontracker"
+                "bundle_id": "com.jewelexx.vapetracker"
               }
             }
           ]
