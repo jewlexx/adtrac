@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 // import 'package:file_saver/file_saver.dart';
-import 'package:share_plus/share_plus.dart';
+// import 'package:share_plus/share_plus.dart';
 import "package:shared_preferences/shared_preferences.dart";
 
 class Counter {
@@ -70,11 +70,11 @@ class CounterExport {
   }
 
   void share() async {
-    String jsonString = json.encode(counts);
-    Uint8List bytes = stringToBytes(jsonString);
-    XFile file = XFile.fromData(bytes, mimeType: "application/json");
+    // String jsonString = json.encode(counts);
+    // Uint8List bytes = stringToBytes(jsonString);
+    // XFile file = XFile.fromData(bytes, mimeType: "application/json");
 
-    await Share.shareXFiles([file]);
+    // await Share.shareXFiles([file]);
   }
 }
 
