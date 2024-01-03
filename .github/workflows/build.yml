@@ -23,4 +23,4 @@ jobs:
       - run: flutter build appbundle
       - uses: actions/upload-artifact@v4
         with:
-          path: 'build\app\outputs\flutter-apk\*.apk'
+          path: 'build\app\outputs\flutter-apk\*'
