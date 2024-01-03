@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 
 import "counter.dart";
 import "historical.dart";
+import "common.dart";
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Addiction Tracker",
+      title: title,
       theme: ThemeData(useMaterial3: true),
       darkTheme: ThemeData(useMaterial3: true, brightness: Brightness.dark),
       themeMode: ThemeMode.system,
