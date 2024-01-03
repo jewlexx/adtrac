@@ -20,11 +20,11 @@ class _NavigationBottomBarState extends State<NavigationBottomBar> {
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.numbers),
-          label: "Today's Hits",
+          label: "Today's Count",
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.calendar_today),
-          label: 'Past Hits',
+          label: 'Past Counts',
         ),
       ],
       onTap: (value) => setState(

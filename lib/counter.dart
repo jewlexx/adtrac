@@ -35,7 +35,7 @@ class _CounterPageState extends State<CounterPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const Text(
-                    'Hits Today:',
+                    "Today's Count:",
                   ),
                   Text(
                     "${counter.count}",
@@ -44,7 +44,7 @@ class _CounterPageState extends State<CounterPage> {
                   ElevatedButton.icon(
                     onPressed: () => setState(() => counter.increment()),
                     icon: const Icon(Icons.add),
-                    label: const Text("Add Hit"),
+                    label: const Text("Add"),
                   )
                 ],
               ),
