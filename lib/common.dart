@@ -3,21 +3,25 @@ import 'package:go_router/go_router.dart';
 
 const String title = 'Addiction Tracker';
 
-int pageToInt(String page) {
-  switch (page) {
-    case "/historical":
-      return 1;
-    default:
-      return 0;
+extension PageParsingString on String {
+  int get asPage {
+    switch (this) {
+      case "/historical":
+        return 1;
+      default:
+        return 0;
+    }
   }
 }
 
-String intToPage(int page) {
-  switch (page) {
-    case 1:
-      return "/historical";
-    default:
-      return "/";
+extension PageParsingInt on int {
+  String get asPage {
+    switch (this) {
+      case 1:
+        return "/historical";
+      default:
+        return "/";
+    }
   }
 }
 
@@ -34,7 +38,7 @@ class _NavigationBottomBarState extends State<NavigationBottomBar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: pageToInt(super.widget.selectedPage),
+      currentIndex: super.widget.selectedPage.asPage,
       type: BottomNavigationBarType.fixed,
       items: const [
         BottomNavigationBarItem(
@@ -48,8 +52,8 @@ class _NavigationBottomBarState extends State<NavigationBottomBar> {
       ],
       onTap: (value) => setState(
         () {
-          if (value != pageToInt(super.widget.selectedPage)) {
-            context.go(intToPage(value));
+          if (value != super.widget.selectedPage.asPage) {
+            context.go(value.asPage);
           }
         },
       ),
