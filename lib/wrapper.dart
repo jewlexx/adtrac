@@ -3,17 +3,35 @@ import 'package:go_router/go_router.dart';
 
 import 'common.dart';
 
-class PageWrapper extends StatelessWidget {
+class PageWrapper extends StatefulWidget {
   final Widget child;
 
   const PageWrapper({super.key, required this.child});
 
   @override
+  State<PageWrapper> createState() => _PageWrapperState();
+}
+
+class _PageWrapperState extends State<PageWrapper> {
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: child,
-      bottomNavigationBar: NavigationBottomBar(
-        selectedPage: GoRouterState.of(context).matchedLocation,
+    var currentPage = GoRouterState.of(context).matchedLocation;
+
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) {
+        print("pop invoked");
+        if (didPop) {
+          setState(() {
+            currentPage = GoRouterState.of(context).matchedLocation;
+          });
+        }
+      },
+      child: Scaffold(
+        body: super.widget.child,
+        bottomNavigationBar: NavigationBottomBar(
+          selectedPage: currentPage,
+        ),
       ),
     );
   }
