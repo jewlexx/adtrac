@@ -45,9 +45,6 @@ class _NavigationBottomBarState extends State<NavigationBottomBar> {
             }
 
             context.go(name);
-            // MaterialPageRoute(
-            //   builder: (context) {},
-            // ),
           }
         },
       ),
