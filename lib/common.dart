@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 const String title = 'Addiction Tracker';
 
@@ -24,7 +25,7 @@ class _NavigationBottomBarState extends State<NavigationBottomBar> {
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.calendar_today),
-          label: 'Past Counts',
+          label: "Past Counts",
         ),
       ],
       onTap: (value) => setState(
@@ -43,7 +44,7 @@ class _NavigationBottomBarState extends State<NavigationBottomBar> {
                 break;
             }
 
-            Navigator.of(context).pushNamed(name);
+            context.go(name);
             // MaterialPageRoute(
             //   builder: (context) {},
             // ),
