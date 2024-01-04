@@ -13,22 +13,13 @@ final GoRouter _router = GoRouter(
   routes: <RouteBase>[
     GoRoute(
       path: '/',
-      pageBuilder: (BuildContext context, GoRouterState state) =>
-          CustomTransitionPage(
-        child: const CounterPage(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-            FadeTransition(opacity: animation, child: child),
-      ),
+      builder: (BuildContext context, GoRouterState state) =>
+          const CounterPage(),
       routes: <RouteBase>[
         GoRoute(
           path: 'historical',
-          pageBuilder: (BuildContext context, GoRouterState state) =>
-              CustomTransitionPage(
-            child: const HistoricalPage(),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) =>
-                    FadeTransition(opacity: animation, child: child),
-          ),
+          builder: (BuildContext context, GoRouterState state) =>
+              const HistoricalPage(),
         ),
       ],
     ),
