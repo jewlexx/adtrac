@@ -1,3 +1,4 @@
+import "package:addictiontracker/wrapper.dart";
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 
@@ -9,17 +10,30 @@ void main() {
   runApp(const MyApp());
 }
 
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorKey = GlobalKey<NavigatorState>();
+
 final GoRouter _router = GoRouter(
-  routes: <RouteBase>[
-    GoRoute(
-      path: '/',
-      builder: (BuildContext context, GoRouterState state) =>
-          const CounterPage(),
-      routes: <RouteBase>[
+  initialLocation: '/',
+  navigatorKey: _rootNavigatorKey,
+  routes: [
+    ShellRoute(
+      navigatorKey: _shellNavigatorKey,
+      pageBuilder: (context, state, child) {
+        return NoTransitionPage(child: PageWrapper(child: child));
+      },
+      routes: [
         GoRoute(
-          path: 'historical',
+          path: '/',
           builder: (BuildContext context, GoRouterState state) =>
-              const HistoricalPage(),
+              const CounterPage(),
+          routes: <RouteBase>[
+            GoRoute(
+              path: 'historical',
+              builder: (BuildContext context, GoRouterState state) =>
+                  const HistoricalPage(),
+            ),
+          ],
         ),
       ],
     ),
