@@ -49,7 +49,9 @@ class _HistoricalPageState extends State<HistoricalPage> {
                   icon: const Icon(Icons.delete_forever),
                 ),
                 IconButton(
-                  onPressed: counter.import,
+                  onPressed: () {
+                    counter.import().then((value) => setState(() {}));
+                  },
                   icon: const Icon(Icons.upload),
                 ),
                 IconButton(

@@ -58,17 +58,14 @@ class Counter {
     export.share();
   }
 
-  void import() {
+  Future<void> import() async {
     CounterExport import = CounterExport(instance);
-    import.import().then(
-      (value) {
-        if (value != null) {
-          value.counts.forEach((key, value) {
-            instance.setInt(key, value as int);
-          });
-        }
-      },
-    );
+    var value = await import.import();
+    if (value != null) {
+      value.counts.forEach((key, value) {
+        instance.setInt(key, value as int);
+      });
+    }
   }
 }
 
