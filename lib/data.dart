@@ -57,18 +57,44 @@ class Counter {
     CounterExport export = CounterExport(instance);
     export.share();
   }
+
+  void import() {
+    CounterExport import = CounterExport(instance);
+    import.import().then(
+      (value) {
+        if (value != null) {
+          instance.clear();
+          instance.setInt(Counter.date(), 0);
+          value.counts.forEach((key, value) {
+            instance.setInt(key, value as int);
+          });
+        }
+      },
+    );
+  }
 }
 
 class CounterExport {
   Map<String, Object> counts = {};
 
   CounterExport(SharedPreferences? prefs) {
-    Set<String> keys = prefs!.getKeys();
+    if (prefs != null) {
+      Set<String> keys = prefs.getKeys();
 
-    for (String key in keys) {
-      Object? count = prefs.get(key);
-      counts[key] = count!;
+      for (String key in keys) {
+        Object? count = prefs.get(key);
+        counts[key] = count!;
+      }
     }
+  }
+
+  factory CounterExport.fromJson(Map<String, dynamic> json) {
+    var export = CounterExport(null);
+    for (String key in json.keys) {
+      export.counts[key] = json[key] as int;
+    }
+
+    return export;
   }
 
   void share() async {
@@ -97,8 +123,9 @@ class CounterExport {
       File file = result.paths.map((path) => File(path!)).toList()[0];
       var data = await file.readAsBytes();
       var parsedData = data.parseUtf8();
+      Map<String, dynamic> counts = jsonDecode(parsedData);
 
-      return json.decode(parsedData);
+      return CounterExport.fromJson(counts);
     } else {
       return null;
     }
