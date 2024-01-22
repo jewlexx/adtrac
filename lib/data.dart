@@ -63,7 +63,6 @@ class Counter {
     import.import().then(
       (value) {
         if (value != null) {
-          instance.setInt(Counter.date(), 0);
           value.counts.forEach((key, value) {
             instance.setInt(key, value as int);
           });
