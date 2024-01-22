@@ -2,7 +2,7 @@ name: addictiontracker
 description: Track addictions each day
 publish_to: "none"
 
-version: 1.0.2+1
+version: 1.0.3+1
 
 environment:
   sdk: ">=2.19.6 <3.0.0"
