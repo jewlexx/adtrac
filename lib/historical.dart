@@ -49,13 +49,13 @@ class _HistoricalPageState extends State<HistoricalPage> {
                   icon: const Icon(Icons.delete_forever),
                 ),
                 IconButton(
+                  onPressed: counter.import,
+                  icon: const Icon(Icons.upload),
+                ),
+                IconButton(
                   onPressed: counter.export,
                   icon: const Icon(Icons.download),
                 ),
-                IconButton(
-                  onPressed: counter.import,
-                  icon: const Icon(Icons.upload),
-                )
               ],
             ),
             body: Center(
