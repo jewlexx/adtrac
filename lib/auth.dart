@@ -23,13 +23,13 @@ Future<UserCredential> signInWithGoogle() async {
   final GoogleSignInAuthentication? googleAuth =
       await googleUser?.authentication;
 
-  if (googleAuth == null) {
-    throw Exception("Missing Auth");
-  }
+  // if (googleAuth == null) {
+  //   throw Exception("Missing Auth");
+  // }
 
   final credential = GoogleAuthProvider.credential(
-    accessToken: googleAuth.accessToken,
-    idToken: googleAuth.idToken,
+    accessToken: googleAuth?.accessToken,
+    idToken: googleAuth?.idToken,
   );
 
   return FirebaseAuth.instance.signInWithCredential(credential);
