@@ -15,6 +15,8 @@ void main() async {
   runApp(const MyApp());
 }
 
+const String title = "Addiction Tracker";
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

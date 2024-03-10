@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:file_saver/file_saver.dart';
 // import 'package:share_plus/share_plus.dart';
@@ -14,7 +15,8 @@ class Counter {
   Counter(this.uid) {
     db = FirebaseFirestore.instance;
   }
-  // static Future<Counter> init() async {}
+
+  static Future<Counter> init() async {}
 
   Future<int> get count async {
     var doc = await db.collection("hits").doc(uid).get();
@@ -69,64 +71,64 @@ class CounterExport {
     return export;
   }
 
-  void share() async {
-    String jsonString = json.encode(counts);
-    Uint8List bytes = jsonString.parseUtf8();
+  // void share() async {
+  //   String jsonString = json.encode(counts);
+  //   Uint8List bytes = jsonString.parseUtf8();
 
-    await FileSaver.instance.saveAs(
-      name: "counts",
-      ext: "json",
-      bytes: bytes,
-      mimeType: MimeType.json,
-    );
+  //   await FileSaver.instance.saveAs(
+  //     name: "counts",
+  //     ext: "json",
+  //     bytes: bytes,
+  //     mimeType: MimeType.json,
+  //   );
 
-    // XFile file = XFile.fromData(bytes, mimeType: "application/json");
+  //   // XFile file = XFile.fromData(bytes, mimeType: "application/json");
 
-    // await Share.shareXFiles([file]);
-  }
+  //   // await Share.shareXFiles([file]);
+  // }
 
-  Future<CounterExport?> import() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ["json"],
-    );
+  // Future<CounterExport?> import() async {
+  //   FilePickerResult? result = await FilePicker.platform.pickFiles(
+  //     type: FileType.custom,
+  //     allowedExtensions: ["json"],
+  //   );
 
-    if (result != null) {
-      File file = result.paths.map((path) => File(path!)).toList()[0];
-      var data = await file.readAsBytes();
-      var parsedData = data.parseUtf8();
-      Map<String, dynamic> counts = jsonDecode(parsedData);
+  //   if (result != null) {
+  //     File file = result.paths.map((path) => File(path!)).toList()[0];
+  //     var data = await file.readAsBytes();
+  //     var parsedData = data.parseUtf8();
+  //     Map<String, dynamic> counts = jsonDecode(parsedData);
 
-      return CounterExport.fromJson(counts);
-    } else {
-      return null;
-    }
-  }
+  //     return CounterExport.fromJson(counts);
+  //   } else {
+  //     return null;
+  //   }
+  // }
 }
 
-extension ToUint8List on String {
-  Uint8List parseUtf8() {
-    List<int> utf8String = utf8.encode(this);
-    Uint8List bytes = Uint8List(utf8String.length);
-    for (int i = 0; i < utf8String.length; i++) {
-      bytes[i] = utf8String[i];
-    }
+// extension ToUint8List on String {
+//   Uint8List parseUtf8() {
+//     List<int> utf8String = utf8.encode(this);
+//     Uint8List bytes = Uint8List(utf8String.length);
+//     for (int i = 0; i < utf8String.length; i++) {
+//       bytes[i] = utf8String[i];
+//     }
 
-  Future<void> setCount(int value) {
-    return _doc.update({date(): value});
-  }
+//   Future<void> setCount(int value) {
+//     return _doc.update({date(): value});
+//   }
 
-  DocumentReference<Map<String, dynamic>> get _doc {
-    return db.collection("hits").doc(uid);
-  }
-  return bytes;
-  }
-}
+//   DocumentReference<Map<String, dynamic>> get _doc {
+//     return db.collection("hits").doc(uid);
+//   }
+//   return bytes;
+//   }
+// }
 
-extension ToString on Uint8List {
-  String parseUtf8() {
-    List<int> utf8String = [];
-    for (int i = 0; i < length; i++) {
-      utf8String.add(this[i]);
-    }
-  }
+// extension ToString on Uint8List {
+//   String parseUtf8() {
+//     List<int> utf8String = [];
+//     for (int i = 0; i < length; i++) {
+//       utf8String.add(this[i]);
+//     }
+//   }
