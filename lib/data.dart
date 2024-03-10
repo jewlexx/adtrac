@@ -11,41 +11,50 @@ import "package:shared_preferences/shared_preferences.dart";
 class Counter {
   String uid;
   late FirebaseFirestore db;
+  late DocumentReference<Map<String, dynamic>> docRef;
 
   Counter(this.uid) {
     db = FirebaseFirestore.instance;
+    docRef = db.collection("hits").doc(uid);
   }
 
-  static Future<Counter> init() async {}
+  static String date() {
+    DateTime now = DateTime.now();
+    return "${now.year} ${now.month} ${now.day}";
+  }
+
+  Future<void> increment() async {
+    int oldCount = await count;
+
+    setCount(oldCount + 1);
+  }
 
   Future<int> get count async {
-    var doc = await db.collection("hits").doc(uid).get();
-    int? current = doc.get(date());
+    final int? current = (await docRef.get()).get(date());
 
     if (current == null) {
-      await setCount(0);
+      setCount(0);
       return 0;
     } else {
       return current;
     }
-
-    return count;
   }
 
-  set count(int newCount) {
-    instance.setInt(Counter.date(), newCount);
-    export.share();
+  Future<void> setCount(int newCount) async {
+    await docRef.update({
+      [date()]: newCount
+    });
   }
 
-  Future<void> import() async {
-    CounterExport import = CounterExport(instance);
-    var value = await import.import();
-    if (value != null) {
-      value.counts.forEach((key, value) {
-        instance.setInt(key, value as int);
-      });
-    }
-  }
+  // Future<void> import() async {
+  //   CounterExport import = CounterExport(instance);
+  //   var value = await import.import();
+  //   if (value != null) {
+  //     value.counts.forEach((key, value) {
+  //       instance.setInt(key, value as int);
+  //     });
+  //   }
+  // }
 }
 
 class CounterExport {
