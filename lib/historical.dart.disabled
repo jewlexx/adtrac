@@ -23,7 +23,7 @@ class _HistoricalPageState extends State<HistoricalPage> {
           if (snapshot.data == null) {
             return Scaffold(
               appBar: AppBar(
-                title: const Text(title),
+                title: const Text("Past Counts"),
               ),
               body: const Center(child: Text("Loading Data...")),
             );
@@ -32,9 +32,34 @@ class _HistoricalPageState extends State<HistoricalPage> {
           var counter = snapshot.data!;
 
           Set<String> keys = counter.instance.getKeys();
-          _allDays = keys.toList().reversed.toList();
+          _allDays = keys.toList();
+          _allDays.sort((a, b) => parseDate(b).compareTo(parseDate(a)));
 
           return Scaffold(
+            appBar: AppBar(
+              title: const Text(title),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      counter.instance.clear();
+                      _allDays = [];
+                    });
+                  },
+                  icon: const Icon(Icons.delete_forever),
+                ),
+                IconButton(
+                  onPressed: () {
+                    counter.import().then((value) => setState(() {}));
+                  },
+                  icon: const Icon(Icons.upload),
+                ),
+                IconButton(
+                  onPressed: counter.export,
+                  icon: const Icon(Icons.download),
+                ),
+              ],
+            ),
             body: Center(
               child: ListView(
                 children: [
@@ -47,7 +72,10 @@ class _HistoricalPageState extends State<HistoricalPage> {
 
                             Set<String> keys = counter.instance.getKeys();
 
-                            _allDays = keys.toList().reversed.toList();
+                            _allDays = keys.toList();
+                            _allDays.sort(
+                              (a, b) => parseDate(b).compareTo(parseDate(a)),
+                            );
                           });
                         },
                         icon: const Icon(Icons.delete_forever),
@@ -61,10 +89,6 @@ class _HistoricalPageState extends State<HistoricalPage> {
               ),
             ),
             bottomNavigationBar: const NavigationBottomBar(selectedPage: 1),
-            floatingActionButton: FloatingActionButton(
-              onPressed: counter.export,
-              child: const Icon(Icons.share),
-            ),
           );
         });
   }
