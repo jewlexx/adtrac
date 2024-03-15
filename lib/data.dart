@@ -1,5 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:cloud_firestore/cloud_firestore.dart'
 // import 'package:file_picker/file_picker.dart';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 // import 'package:file_saver/file_saver.dart';
 // import 'package:share_plus/share_plus.dart';
 import "package:shared_preferences/shared_preferences.dart";
@@ -80,12 +85,28 @@ class CounterExport {
   //   String jsonString = json.encode(counts);
   //   Uint8List bytes = jsonString.parseUtf8();
 
-  //   await FileSaver.instance.saveAs(
-  //     name: "counts",
-  //     ext: "json",
-  //     bytes: bytes,
-  //     mimeType: MimeType.json,
+  // if (!await FlutterFileDialog.isPickDirectorySupported()) {
+  //   throw 'Picking directory not supported';
+  // }
+
+  // final pickedDirectory = await FlutterFileDialog.pickDirectory();
+
+  // if (pickedDirectory != null) {
+  //   await FlutterFileDialog.saveFileToDirectory(
+  //     directory: pickedDirectory,
+  //     data: bytes,
+  //     mimeType: "application/json",
+  //     fileName: "counts.json",
+  //     replace: false,
   //   );
+  // }
+
+  // await FileSaver.instance.saveAs(
+  //   name: "counts",
+  //   ext: "json",
+  //   bytes: bytes,
+  //   mimeType: MimeType.json,
+  // );
 
   //   // XFile file = XFile.fromData(bytes, mimeType: "application/json");
 
