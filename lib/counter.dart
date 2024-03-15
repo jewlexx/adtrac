@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
 
-import 'auth.dart' show signInWithGoogle;
+import 'auth.dart' show SignIn;
 import 'common.dart';
 import 'data.dart';
 
@@ -20,17 +20,8 @@ class _CounterPageState extends State<CounterPage> {
     if (uid == null) {
       return Scaffold(
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextButton(
-                onPressed: () => signInWithGoogle().then((cred) {
-                  print("Signed in");
-                  setState(() => uid = cred.user?.uid);
-                }).catchError(print),
-                child: const Text("Sign In With Google"),
-              ),
-            ],
+          child: SignIn(
+            setUid: (newUid) => setState(() => uid = newUid),
           ),
         ),
         bottomNavigationBar: const NavigationBottomBar(selectedPage: 0),
