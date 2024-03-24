@@ -15,7 +15,7 @@ class _SignInPageState extends State<SignInPage> {
     return Scaffold(
       body: Center(
         child: Auth(
-          setUid: (_) => Navigator.of(context).pushNamed("/"),
+          setUid: (_) => Navigator.of(context).pushReplacementNamed("/"),
         ),
       ),
     );

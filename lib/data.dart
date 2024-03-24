@@ -60,6 +60,8 @@ class Counter {
     } else {
       this.date = date;
     }
+
+    checkOrInit();
   }
 
   DocumentReference<CountDate> get docRef {
@@ -78,12 +80,9 @@ class Counter {
   }
 
   Future<int> get count async {
+    checkOrInit();
+
     final doc = await docRef.get();
-
-    if (!doc.exists) {
-      docRef.set(CountDate(count: 0, date: date));
-    }
-
     final int? current = doc.data()?.count;
 
     if (current == null) {
@@ -100,6 +99,12 @@ class Counter {
 
   Future<void> delete() async {
     await docRef.delete();
+  }
+
+  Future<void> checkOrInit() async {
+    if (!(await docRef.get()).exists) {
+      docRef.set(CountDate(count: 0, date: date));
+    }
   }
 
   Stream<DocumentSnapshot<CountDate>> stream() {

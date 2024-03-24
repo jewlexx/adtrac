@@ -18,7 +18,7 @@ class _CounterPageState extends State<CounterPage> {
 
     if (uid == null) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        Navigator.of(context).pushNamed("/sign-in");
+        Navigator.of(context).pushReplacementNamed("/sign-in");
       });
       return Container();
     }

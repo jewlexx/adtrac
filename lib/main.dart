@@ -16,7 +16,7 @@ void main() async {
 
   if (kDebugMode && ENABLE_EMULATORS) {
     try {
-      // FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8009);
+      // FirebaseFirestore.instance.use FirestoreEmulator('localhost', 8009);
       // await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
     } catch (e) {
       // ignore: avoid_print

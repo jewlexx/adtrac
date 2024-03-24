@@ -18,7 +18,7 @@ class _HistoricalPageState extends State<HistoricalPage> {
     var uid = FirebaseAuth.instance.currentUser?.uid;
 
     if (uid == null) {
-      Navigator.of(context).pushNamed("/sign-in");
+      Navigator.of(context).pushReplacementNamed("/sign-in");
       return Container();
     }
 
