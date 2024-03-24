@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 // import 'package:file_picker/file_picker.dart';
 // import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 // import 'package:file_saver/file_saver.dart';
@@ -177,48 +182,52 @@ class CounterExport {
   //   // await Share.shareXFiles([file]);
   // }
 
-  // Future<CounterExport?> import() async {
-  //   FilePickerResult? result = await FilePicker.platform.pickFiles(
-  //     type: FileType.custom,
-  //     allowedExtensions: ["json"],
-  //   );
+  static Future<CounterExport?> import() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ["json"],
+    );
 
-  //   if (result != null) {
-  //     File file = result.paths.map((path) => File(path!)).toList()[0];
-  //     var data = await file.readAsBytes();
-  //     var parsedData = data.parseUtf8();
-  //     Map<String, dynamic> counts = jsonDecode(parsedData);
+    if (result != null) {
+      File file = result.paths.map((path) => File(path!)).toList()[0];
+      var data = await file.readAsBytes();
+      var parsedData = data.parseUtf8();
+      Map<String, dynamic> counts = jsonDecode(parsedData);
 
-  //     return CounterExport.fromJson(counts);
-  //   } else {
-  //     return null;
-  //   }
-  // }
+      return CounterExport.fromJson(counts);
+    } else {
+      return null;
+    }
+  }
+
+  Future<void> upload(CollectionReference<CountDate> collection) async {
+    for (var date in counts.keys) {
+      await collection
+          .doc(date)
+          .set(CountDate(count: counts[date] as int, date: date));
+    }
+  }
 }
 
-// extension ToUint8List on String {
-//   Uint8List parseUtf8() {
-//     List<int> utf8String = utf8.encode(this);
-//     Uint8List bytes = Uint8List(utf8String.length);
-//     for (int i = 0; i < utf8String.length; i++) {
-//       bytes[i] = utf8String[i];
-//     }
+extension ToUint8List on String {
+  Uint8List parseUtf8() {
+    List<int> utf8String = utf8.encode(this);
+    Uint8List bytes = Uint8List(utf8String.length);
+    for (int i = 0; i < utf8String.length; i++) {
+      bytes[i] = utf8String[i];
+    }
 
-//   Future<void> setCount(int value) {
-//     return _doc.update({date(): value});
-//   }
+    return bytes;
+  }
+}
 
-//   DocumentReference<Map<String, dynamic>> get _doc {
-//     return db.collection("hits").doc(uid);
-//   }
-//   return bytes;
-//   }
-// }
+extension ToString on Uint8List {
+  String parseUtf8() {
+    List<int> utf8String = [];
+    for (int i = 0; i < length; i++) {
+      utf8String.add(this[i]);
+    }
 
-// extension ToString on Uint8List {
-//   String parseUtf8() {
-//     List<int> utf8String = [];
-//     for (int i = 0; i < length; i++) {
-//       utf8String.add(this[i]);
-//     }
-//   }
+    return String.fromCharCodes(utf8String);
+  }
+}
