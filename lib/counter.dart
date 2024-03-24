@@ -13,10 +13,10 @@ class CounterPage extends StatefulWidget {
 }
 
 class _CounterPageState extends State<CounterPage> {
-  var uid = FirebaseAuth.instance.currentUser?.uid;
-
   @override
   Widget build(BuildContext context) {
+    var uid = FirebaseAuth.instance.currentUser?.uid;
+
     if (uid == null) {
       return Scaffold(
         body: Center(
@@ -28,12 +28,11 @@ class _CounterPageState extends State<CounterPage> {
       );
     }
 
-    var counter = Counter(uid: uid!);
+    var counter = Counter(userData: UserDataHandler(uid: uid));
 
     return FutureBuilder(
         future: counter.count,
         builder: (ctx, snapshot) {
-          print("pp ${snapshot.error}");
           if (snapshot.data == null) {
             return Scaffold(
               appBar: AppBar(

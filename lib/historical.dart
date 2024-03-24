@@ -1,3 +1,6 @@
+import 'package:addictiontracker/auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -12,14 +15,31 @@ class HistoricalPage extends StatefulWidget {
 }
 
 class _HistoricalPageState extends State<HistoricalPage> {
-  final Future<Counter> _vapeCount = Counter.init();
-  late List<String> _allDays;
+  late List<QueryDocumentSnapshot<CountDate>> _allDays;
 
   @override
   Widget build(BuildContext context) {
+    var uid = FirebaseAuth.instance.currentUser?.uid;
+
+    if (uid == null) {
+      // TODO: Use page redirects rather than component
+      return Scaffold(
+        body: Center(
+          child: SignIn(
+            setUid: (newUid) => setState(() => uid = newUid),
+          ),
+        ),
+        bottomNavigationBar: const NavigationBottomBar(selectedPage: 0),
+      );
+    }
+
+    var userData = UserDataHandler(uid: uid);
+
+    var docs = userData.userCounts.get().then((value) => value.docs);
+
     return FutureBuilder(
-        future: _vapeCount,
-        builder: (BuildContext ctx, AsyncSnapshot<Counter> snapshot) {
+        future: docs,
+        builder: (ctx, snapshot) {
           if (snapshot.data == null) {
             return Scaffold(
               appBar: AppBar(
@@ -29,11 +49,9 @@ class _HistoricalPageState extends State<HistoricalPage> {
             );
           }
 
-          var counter = snapshot.data!;
-
-          Set<String> keys = counter.instance.getKeys();
-          _allDays = keys.toList();
-          _allDays.sort((a, b) => parseDate(b).compareTo(parseDate(a)));
+          _allDays = snapshot.data!.toList();
+          _allDays.sort((a, b) =>
+              parseDate(b.data().date).compareTo(parseDate(a.data().date)));
 
           return Scaffold(
             appBar: AppBar(
@@ -42,48 +60,45 @@ class _HistoricalPageState extends State<HistoricalPage> {
                 IconButton(
                   onPressed: () {
                     setState(() {
-                      counter.instance.clear();
-                      _allDays = [];
+                      _allDays.clear();
                     });
                   },
                   icon: const Icon(Icons.delete_forever),
                 ),
                 IconButton(
                   onPressed: () {
-                    counter.import().then((value) => setState(() {}));
+                    // counts.import().then((value) => setState(() {}));
                   },
                   icon: const Icon(Icons.upload),
                 ),
-                IconButton(
-                  onPressed: counter.export,
-                  icon: const Icon(Icons.download),
-                ),
+                // IconButton(
+                //   onPressed: counts.export,
+                //   icon: const Icon(Icons.download),
+                // ),
               ],
             ),
             body: Center(
               child: ListView(
                 children: [
-                  for (String day in _allDays)
+                  for (var day in _allDays)
                     ListTile(
                       leading: IconButton(
                         onPressed: () {
-                          setState(() {
-                            counter.instance.remove(day);
-
-                            Set<String> keys = counter.instance.getKeys();
-
-                            _allDays = keys.toList();
-                            _allDays.sort(
-                              (a, b) => parseDate(b).compareTo(parseDate(a)),
-                            );
-                          });
+                          day.data().toCounter().delete().then(
+                                (value) => setState(() {
+                                  _allDays.remove(day);
+                                  _allDays.sort((a, b) =>
+                                      parseDate(b.data().date)
+                                          .compareTo(parseDate(a.data().date)));
+                                }),
+                              );
                         },
                         icon: const Icon(Icons.delete_forever),
                       ),
                       contentPadding:
                           const EdgeInsets.only(left: 100, right: 100),
-                      title: Text(formatDate(parseDate(day))),
-                      trailing: Text(counter.instance.getInt(day).toString()),
+                      title: Text(formatDate(parseDate(day.data().date))),
+                      trailing: Text(day.data().count.toString()),
                     ),
                 ],
               ),

@@ -1,9 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:file_picker/file_picker.dart';
 // import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 // import 'package:file_saver/file_saver.dart';
 // import 'package:share_plus/share_plus.dart';
 import "package:shared_preferences/shared_preferences.dart";
+
+class UserDataHandler {
+  final String uid;
+  late FirebaseFirestore db;
+
+  UserDataHandler({required this.uid}) {
+    db = FirebaseFirestore.instance;
+  }
+
+  DocumentReference<Map<String, dynamic>> get userDoc {
+    return db.collection("users").doc(uid);
+  }
+
+  CollectionReference<CountDate> get userCounts {
+    return userDoc.collection("counts").withConverter<CountDate>(
+          fromFirestore: CountDate.fromFirestore,
+          toFirestore: CountDate.toFirestore,
+        );
+  }
+}
 
 class CountDate {
   int count;
@@ -18,36 +39,31 @@ class CountDate {
   static Map<String, Object?> toFirestore(CountDate data, SetOptions? opts) {
     return {'count': data.count, 'date': data.date};
   }
+
+  Counter toCounter() {
+    return Counter(
+      userData: UserDataHandler(
+        uid: FirebaseAuth.instance.currentUser!.uid,
+      ),
+      date: date,
+    );
+  }
 }
 
 class Counter {
-  String uid;
-  late FirebaseFirestore db;
+  UserDataHandler userData;
   late String date;
 
-  Counter({required this.uid, String? date}) {
+  Counter({required this.userData, String? date}) {
     if (date == null) {
       this.date = currentDate();
     } else {
       this.date = date;
     }
-
-    db = FirebaseFirestore.instance;
-  }
-
-  DocumentReference<Map<String, dynamic>> get userDoc {
-    return db.collection("users").doc(uid);
-  }
-
-  CollectionReference<CountDate> get userCounts {
-    return userDoc.collection("counts").withConverter<CountDate>(
-          fromFirestore: CountDate.fromFirestore,
-          toFirestore: CountDate.toFirestore,
-        );
   }
 
   DocumentReference<CountDate> get docRef {
-    return userCounts.doc(date);
+    return userData.userCounts.doc(date);
   }
 
   static String currentDate() {
@@ -80,6 +96,10 @@ class Counter {
 
   Future<void> setCount(int newCount) async {
     await docRef.update({'count': newCount});
+  }
+
+  Future<void> delete() async {
+    await docRef.delete();
   }
 
   // Future<void> import() async {
