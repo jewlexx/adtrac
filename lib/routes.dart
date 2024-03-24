@@ -1,7 +1,6 @@
-import 'package:addictiontracker/pages/sign-in.dart';
-
 import 'pages/counter.dart';
 import 'pages/historical.dart';
+import 'pages/sign-in.dart';
 
 final routes = {
   "/": (context) => const CounterPage(),
