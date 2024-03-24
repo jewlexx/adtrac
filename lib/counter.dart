@@ -28,11 +28,12 @@ class _CounterPageState extends State<CounterPage> {
       );
     }
 
-    var counter = Counter(uid!);
+    var counter = Counter(uid: uid!);
 
-    return FutureBuilder<int>(
+    return FutureBuilder(
         future: counter.count,
         builder: (ctx, snapshot) {
+          print("pp ${snapshot.error}");
           if (snapshot.data == null) {
             return Scaffold(
               appBar: AppBar(
@@ -57,9 +58,9 @@ class _CounterPageState extends State<CounterPage> {
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   ElevatedButton.icon(
-                    onPressed: () => setState(() async {
-                      await counter.increment();
-                    }),
+                    onPressed: () {
+                      counter.increment().then((_) => setState(() {}));
+                    },
                     icon: const Icon(Icons.add),
                     label: const Text("Add"),
                   )

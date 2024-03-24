@@ -5,17 +5,52 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:share_plus/share_plus.dart';
 import "package:shared_preferences/shared_preferences.dart";
 
+class CountDate {
+  int count;
+  String date;
+
+  CountDate({required this.count, required this.date});
+
+  CountDate.fromFirestore(
+      DocumentSnapshot<Map<String, dynamic>> data, SnapshotOptions? opts)
+      : this(count: data.get("count"), date: data.get("date"));
+
+  static Map<String, Object?> toFirestore(CountDate data, SetOptions? opts) {
+    return {'count': data.count, 'date': data.date};
+  }
+}
+
 class Counter {
   String uid;
   late FirebaseFirestore db;
-  late DocumentReference<Map<String, dynamic>> docRef;
+  late String date;
 
-  Counter(this.uid) {
+  Counter({required this.uid, String? date}) {
+    if (date == null) {
+      this.date = currentDate();
+    } else {
+      this.date = date;
+    }
+
     db = FirebaseFirestore.instance;
-    docRef = db.collection("hits").doc(uid);
   }
 
-  static String date() {
+  DocumentReference<Map<String, dynamic>> get userDoc {
+    return db.collection("users").doc(uid);
+  }
+
+  CollectionReference<CountDate> get userCounts {
+    return userDoc.collection("counts").withConverter<CountDate>(
+          fromFirestore: CountDate.fromFirestore,
+          toFirestore: CountDate.toFirestore,
+        );
+  }
+
+  DocumentReference<CountDate> get docRef {
+    return userCounts.doc(date);
+  }
+
+  static String currentDate() {
     DateTime now = DateTime.now();
     return "${now.year} ${now.month} ${now.day}";
   }
@@ -27,7 +62,13 @@ class Counter {
   }
 
   Future<int> get count async {
-    final int? current = (await docRef.get()).get(date());
+    final doc = await docRef.get();
+
+    if (!doc.exists) {
+      docRef.set(CountDate(count: 0, date: date));
+    }
+
+    final int? current = doc.data()?.count;
 
     if (current == null) {
       setCount(0);
@@ -38,9 +79,7 @@ class Counter {
   }
 
   Future<void> setCount(int newCount) async {
-    await docRef.update({
-      [date()]: newCount
-    });
+    await docRef.update({'count': newCount});
   }
 
   // Future<void> import() async {
