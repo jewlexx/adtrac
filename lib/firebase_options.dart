@@ -70,8 +70,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '640269433885',
     projectId: 'addictiontracker-2f028',
     storageBucket: 'addictiontracker-2f028.appspot.com',
-    androidClientId: '640269433885-kceub8mltee0k6613pls05g8fv4mtgn9.apps.googleusercontent.com',
-    iosClientId: '640269433885-1e5sv9ds7ndf4cv44m3g0c8k0s6jio10.apps.googleusercontent.com',
+    androidClientId:
+        '640269433885-kceub8mltee0k6613pls05g8fv4mtgn9.apps.googleusercontent.com',
+    iosClientId:
+        '640269433885-1e5sv9ds7ndf4cv44m3g0c8k0s6jio10.apps.googleusercontent.com',
     iosBundleId: 'com.jewelexx.vapetracker',
   );
 }

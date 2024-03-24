@@ -9,16 +9,18 @@ import "counter.dart";
 
 import 'firebase_options.dart';
 
+const ENABLE_EMULATORS = false;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  if (kDebugMode) {
+  if (kDebugMode && ENABLE_EMULATORS) {
     try {
-      FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8009);
-      await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+      // FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8009);
+      // await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
     } catch (e) {
       // ignore: avoid_print
       print(e);
