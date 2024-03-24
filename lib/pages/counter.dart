@@ -1,7 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
 
-import 'common.dart';
-import 'data.dart';
+import '../common.dart';
+import '../data.dart';
 
 class CounterPage extends StatefulWidget {
   const CounterPage({super.key});
@@ -11,13 +12,22 @@ class CounterPage extends StatefulWidget {
 }
 
 class _CounterPageState extends State<CounterPage> {
-  final Future<Counter> _vapeCount = Counter.init();
-
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _vapeCount,
-        builder: (BuildContext ctx, AsyncSnapshot<Counter> snapshot) {
+    var uid = FirebaseAuth.instance.currentUser?.uid;
+
+    if (uid == null) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        Navigator.of(context).pushReplacementNamed("/sign-in");
+      });
+      return Container();
+    }
+
+    var counter = Counter(userData: UserDataHandler(uid: uid));
+
+    return StreamBuilder(
+        stream: counter.stream(),
+        builder: (ctx, snapshot) {
           if (snapshot.data == null) {
             return Scaffold(
               appBar: AppBar(
@@ -27,7 +37,7 @@ class _CounterPageState extends State<CounterPage> {
             );
           }
 
-          var counter = snapshot.data!;
+          final count = snapshot.data!.data()?.count ?? 0;
 
           return Scaffold(
             body: Center(
@@ -38,11 +48,13 @@ class _CounterPageState extends State<CounterPage> {
                     "Today's Count:",
                   ),
                   Text(
-                    "${counter.count}",
+                    "$count",
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   ElevatedButton.icon(
-                    onPressed: () => setState(() => counter.increment()),
+                    onPressed: () {
+                      counter.increment();
+                    },
                     icon: const Icon(Icons.add),
                     label: const Text("Add"),
                   )

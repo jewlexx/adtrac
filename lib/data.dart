@@ -1,73 +1,130 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter_file_dialog/flutter_file_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+// import 'package:file_picker/file_picker.dart';
+// import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 // import 'package:file_saver/file_saver.dart';
 // import 'package:share_plus/share_plus.dart';
 import "package:shared_preferences/shared_preferences.dart";
 
-class Counter {
-  late SharedPreferences instance;
-  bool readying = false;
-  // VapeCount({this.instance});
+class UserDataHandler {
+  final String uid;
+  late FirebaseFirestore db;
 
-  static Future<Counter> init() async {
-    SharedPreferences instance = await SharedPreferences.getInstance();
-    Counter value = Counter();
-    value.instance = instance;
-
-    // Checks that the instance has not already been initialized
-    // and that the instance is not in the process of being initialized.
-    String currentDate = Counter.date();
-
-    if (instance.getInt(currentDate) == null) {
-      await instance.setInt(currentDate, 0);
-    }
-
-    return value;
+  UserDataHandler({required this.uid}) {
+    db = FirebaseFirestore.instance;
   }
 
-  static String date() {
+  DocumentReference<Map<String, dynamic>> get userDoc {
+    return db.collection("users").doc(uid);
+  }
+
+  CollectionReference<CountDate> get userCounts {
+    return userDoc.collection("counts").withConverter<CountDate>(
+          fromFirestore: CountDate.fromFirestore,
+          toFirestore: CountDate.toFirestore,
+        );
+  }
+}
+
+class CountDate {
+  int count;
+  String date;
+
+  CountDate({required this.count, required this.date});
+
+  CountDate.fromFirestore(
+      DocumentSnapshot<Map<String, dynamic>> data, SnapshotOptions? opts)
+      : this(count: data.get("count"), date: data.get("date"));
+
+  static Map<String, Object?> toFirestore(CountDate data, SetOptions? opts) {
+    return {'count': data.count, 'date': data.date};
+  }
+
+  Counter toCounter() {
+    return Counter(
+      userData: UserDataHandler(
+        uid: FirebaseAuth.instance.currentUser!.uid,
+      ),
+      date: date,
+    );
+  }
+}
+
+class Counter {
+  UserDataHandler userData;
+  late String date;
+
+  Counter({required this.userData, String? date}) {
+    if (date == null) {
+      this.date = currentDate();
+    } else {
+      this.date = date;
+    }
+
+    checkOrInit();
+  }
+
+  DocumentReference<CountDate> get docRef {
+    return userData.userCounts.doc(date);
+  }
+
+  static String currentDate() {
     DateTime now = DateTime.now();
     return "${now.year} ${now.month} ${now.day}";
   }
 
-  void increment() {
-    count += 1;
+  Future<void> increment() async {
+    int oldCount = await count;
+
+    setCount(oldCount + 1);
   }
 
-  int get count {
-    String date = Counter.date();
-    int? count = instance.getInt(date);
+  Future<int> get count async {
+    checkOrInit();
 
-    if (count == null) {
-      instance.setInt(date, 0);
+    final doc = await docRef.get();
+    final int? current = doc.data()?.count;
+
+    if (current == null) {
+      setCount(0);
       return 0;
-    }
-
-    return count;
-  }
-
-  set count(int newCount) {
-    instance.setInt(Counter.date(), newCount);
-  }
-
-  void export() {
-    CounterExport export = CounterExport(instance);
-    export.share();
-  }
-
-  Future<void> import() async {
-    CounterExport import = CounterExport(instance);
-    var value = await import.import();
-    if (value != null) {
-      value.counts.forEach((key, value) {
-        instance.setInt(key, value as int);
-      });
+    } else {
+      return current;
     }
   }
+
+  Future<void> setCount(int newCount) async {
+    await docRef.update({'count': newCount});
+  }
+
+  Future<void> delete() async {
+    await docRef.delete();
+  }
+
+  Future<void> checkOrInit() async {
+    if (!(await docRef.get()).exists) {
+      docRef.set(CountDate(count: 0, date: date));
+    }
+  }
+
+  Stream<DocumentSnapshot<CountDate>> stream() {
+    return docRef.snapshots();
+  }
+
+  // Future<void> import() async {
+  //   CounterExport import = CounterExport(instance);
+  //   var value = await import.import();
+  //   if (value != null) {
+  //     value.counts.forEach((key, value) {
+  //       instance.setInt(key, value as int);
+  //     });
+  //   }
+  // }
 }
 
 class CounterExport {
@@ -93,39 +150,39 @@ class CounterExport {
     return export;
   }
 
-  void share() async {
-    String jsonString = json.encode(counts);
-    Uint8List bytes = jsonString.parseUtf8();
+  // void share() async {
+  //   String jsonString = json.encode(counts);
+  //   Uint8List bytes = jsonString.parseUtf8();
 
-    if (!await FlutterFileDialog.isPickDirectorySupported()) {
-      throw 'Picking directory not supported';
-    }
+  // if (!await FlutterFileDialog.isPickDirectorySupported()) {
+  //   throw 'Picking directory not supported';
+  // }
 
-    final pickedDirectory = await FlutterFileDialog.pickDirectory();
+  // final pickedDirectory = await FlutterFileDialog.pickDirectory();
 
-    if (pickedDirectory != null) {
-      await FlutterFileDialog.saveFileToDirectory(
-        directory: pickedDirectory,
-        data: bytes,
-        mimeType: "application/json",
-        fileName: "counts.json",
-        replace: false,
-      );
-    }
+  // if (pickedDirectory != null) {
+  //   await FlutterFileDialog.saveFileToDirectory(
+  //     directory: pickedDirectory,
+  //     data: bytes,
+  //     mimeType: "application/json",
+  //     fileName: "counts.json",
+  //     replace: false,
+  //   );
+  // }
 
-    // await FileSaver.instance.saveAs(
-    //   name: "counts",
-    //   ext: "json",
-    //   bytes: bytes,
-    //   mimeType: MimeType.json,
-    // );
+  // await FileSaver.instance.saveAs(
+  //   name: "counts",
+  //   ext: "json",
+  //   bytes: bytes,
+  //   mimeType: MimeType.json,
+  // );
 
-    // XFile file = XFile.fromData(bytes, mimeType: "application/json");
+  //   // XFile file = XFile.fromData(bytes, mimeType: "application/json");
 
-    // await Share.shareXFiles([file]);
-  }
+  //   // await Share.shareXFiles([file]);
+  // }
 
-  Future<CounterExport?> import() async {
+  static Future<CounterExport?> import() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ["json"],
@@ -140,6 +197,14 @@ class CounterExport {
       return CounterExport.fromJson(counts);
     } else {
       return null;
+    }
+  }
+
+  Future<void> upload(CollectionReference<CountDate> collection) async {
+    for (var date in counts.keys) {
+      await collection
+          .doc(date)
+          .set(CountDate(count: counts[date] as int, date: date));
     }
   }
 }
@@ -163,6 +228,6 @@ extension ToString on Uint8List {
       utf8String.add(this[i]);
     }
 
-    return utf8.decode(utf8String);
+    return String.fromCharCodes(utf8String);
   }
 }
