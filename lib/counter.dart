@@ -30,8 +30,8 @@ class _CounterPageState extends State<CounterPage> {
 
     var counter = Counter(userData: UserDataHandler(uid: uid));
 
-    return FutureBuilder(
-        future: counter.count,
+    return StreamBuilder(
+        stream: counter.stream(),
         builder: (ctx, snapshot) {
           if (snapshot.data == null) {
             return Scaffold(
@@ -42,7 +42,7 @@ class _CounterPageState extends State<CounterPage> {
             );
           }
 
-          var count = snapshot.data!;
+          final count = snapshot.data!.data()?.count ?? 0;
 
           return Scaffold(
             body: Center(
@@ -58,7 +58,7 @@ class _CounterPageState extends State<CounterPage> {
                   ),
                   ElevatedButton.icon(
                     onPressed: () {
-                      counter.increment().then((_) => setState(() {}));
+                      counter.increment();
                     },
                     icon: const Icon(Icons.add),
                     label: const Text("Add"),

@@ -102,6 +102,10 @@ class Counter {
     await docRef.delete();
   }
 
+  Stream<DocumentSnapshot<CountDate>> stream() {
+    return docRef.snapshots();
+  }
+
   // Future<void> import() async {
   //   CounterExport import = CounterExport(instance);
   //   var value = await import.import();
