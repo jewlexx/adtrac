@@ -1,5 +1,4 @@
 import 'package:addictiontracker/auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -15,8 +14,6 @@ class HistoricalPage extends StatefulWidget {
 }
 
 class _HistoricalPageState extends State<HistoricalPage> {
-  late List<QueryDocumentSnapshot<CountDate>> _allDays;
-
   @override
   Widget build(BuildContext context) {
     var uid = FirebaseAuth.instance.currentUser?.uid;
@@ -35,10 +32,10 @@ class _HistoricalPageState extends State<HistoricalPage> {
 
     var userData = UserDataHandler(uid: uid);
 
-    var docs = userData.userCounts.get().then((value) => value.docs);
+    var docs = userData.userCounts.snapshots().map((value) => value.docs);
 
-    return FutureBuilder(
-        future: docs,
+    return StreamBuilder(
+        stream: docs,
         builder: (ctx, snapshot) {
           if (snapshot.data == null) {
             return Scaffold(
@@ -49,8 +46,8 @@ class _HistoricalPageState extends State<HistoricalPage> {
             );
           }
 
-          _allDays = snapshot.data!.toList();
-          _allDays.sort((a, b) =>
+          var days = snapshot.data!.toList();
+          days.sort((a, b) =>
               parseDate(b.data().date).compareTo(parseDate(a.data().date)));
 
           return Scaffold(
@@ -59,9 +56,9 @@ class _HistoricalPageState extends State<HistoricalPage> {
               actions: [
                 IconButton(
                   onPressed: () {
-                    setState(() {
-                      _allDays.clear();
-                    });
+                    for (var day in days) {
+                      day.data().toCounter().delete();
+                    }
                   },
                   icon: const Icon(Icons.delete_forever),
                 ),
@@ -80,18 +77,11 @@ class _HistoricalPageState extends State<HistoricalPage> {
             body: Center(
               child: ListView(
                 children: [
-                  for (var day in _allDays)
+                  for (var day in days)
                     ListTile(
                       leading: IconButton(
                         onPressed: () {
-                          day.data().toCounter().delete().then(
-                                (value) => setState(() {
-                                  _allDays.remove(day);
-                                  _allDays.sort((a, b) =>
-                                      parseDate(b.data().date)
-                                          .compareTo(parseDate(a.data().date)));
-                                }),
-                              );
+                          day.data().toCounter().delete();
                         },
                         icon: const Icon(Icons.delete_forever),
                       ),
