@@ -25,9 +25,9 @@ void main() async {
       // ignore: avoid_print
       print(e);
     }
-
-    runApp(const MyApp());
   }
+
+  runApp(const MyApp());
 }
 
 const String title = "Addiction Tracker";
