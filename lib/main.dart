@@ -1,10 +1,9 @@
-import "package:addictiontracker/historical.dart";
 import "package:firebase_core/firebase_core.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 
-import "counter.dart";
-// import "historical.dart";
+import "pages/counter.dart";
+import "pages/historical.dart";
 
 import 'firebase_options.dart';
 

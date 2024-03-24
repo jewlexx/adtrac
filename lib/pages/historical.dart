@@ -1,10 +1,10 @@
-import 'package:addictiontracker/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'common.dart';
-import 'data.dart';
+import '../common.dart';
+import '../auth.dart';
+import '../data.dart';
 
 class HistoricalPage extends StatefulWidget {
   const HistoricalPage({super.key});

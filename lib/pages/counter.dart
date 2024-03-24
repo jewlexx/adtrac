@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
 
-import 'auth.dart' show SignIn;
-import 'common.dart';
-import 'data.dart';
+import '../auth.dart' show SignIn;
+import '../common.dart';
+import '../data.dart';
 
 class CounterPage extends StatefulWidget {
   const CounterPage({super.key});
