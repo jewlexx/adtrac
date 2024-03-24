@@ -2,8 +2,7 @@ import "package:firebase_core/firebase_core.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 
-import "pages/counter.dart";
-import "pages/historical.dart";
+import "routes.dart";
 
 import 'firebase_options.dart';
 
@@ -40,10 +39,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(useMaterial3: true),
       darkTheme: ThemeData(useMaterial3: true, brightness: Brightness.dark),
       themeMode: ThemeMode.system,
-      routes: {
-        "/": (context) => const CounterPage(),
-        "/historical": (context) => const HistoricalPage(),
-      },
+      routes: routes,
     );
   }
 }

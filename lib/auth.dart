@@ -38,20 +38,20 @@ Future<UserCredential> signInWithGoogle() async {
 }
 
 // Define a custom Form widget.
-class SignIn extends StatefulWidget {
+class Auth extends StatefulWidget {
   final Function(String? uid) setUid;
 
-  const SignIn({super.key, required this.setUid});
+  const Auth({super.key, required this.setUid});
 
   @override
-  SignInState createState() {
-    return SignInState();
+  AuthState createState() {
+    return AuthState();
   }
 }
 
 // Define a corresponding State class.
 // This class holds data related to the form.
-class SignInState extends State<SignIn> {
+class AuthState extends State<Auth> {
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
   //
@@ -69,9 +69,8 @@ class SignInState extends State<SignIn> {
       children: <Widget>[
         TextButton(
           onPressed: () => signInWithGoogle().then((cred) {
-            print("Signed in");
             setUid(cred.user?.uid);
-          }).catchError(print),
+          }),
           child: const Text("Sign In With Google"),
         ),
         Form(

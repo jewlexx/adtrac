@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
 
-import '../auth.dart' show SignIn;
 import '../common.dart';
 import '../data.dart';
 
@@ -18,14 +17,10 @@ class _CounterPageState extends State<CounterPage> {
     var uid = FirebaseAuth.instance.currentUser?.uid;
 
     if (uid == null) {
-      return Scaffold(
-        body: Center(
-          child: SignIn(
-            setUid: (newUid) => setState(() => uid = newUid),
-          ),
-        ),
-        bottomNavigationBar: const NavigationBottomBar(selectedPage: 0),
-      );
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        Navigator.of(context).pushNamed("/sign-in");
+      });
+      return Container();
     }
 
     var counter = Counter(userData: UserDataHandler(uid: uid));

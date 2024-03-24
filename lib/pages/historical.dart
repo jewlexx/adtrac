@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../common.dart';
-import '../auth.dart';
 import '../data.dart';
 
 class HistoricalPage extends StatefulWidget {
@@ -19,15 +18,8 @@ class _HistoricalPageState extends State<HistoricalPage> {
     var uid = FirebaseAuth.instance.currentUser?.uid;
 
     if (uid == null) {
-      // TODO: Use page redirects rather than component
-      return Scaffold(
-        body: Center(
-          child: SignIn(
-            setUid: (newUid) => setState(() => uid = newUid),
-          ),
-        ),
-        bottomNavigationBar: const NavigationBottomBar(selectedPage: 0),
-      );
+      Navigator.of(context).pushNamed("/sign-in");
+      return Container();
     }
 
     var userData = UserDataHandler(uid: uid);
