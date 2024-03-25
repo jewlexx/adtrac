@@ -27,10 +27,78 @@ class AdTracAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(title),
       actions: [
         if (actions != null) ...actions!,
-        CircleAvatar(
-          foregroundImage: CachedNetworkImageProvider(photoUrl),
+        IconButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return UserDialog(user: user);
+              },
+            );
+          },
+          icon: CircleAvatar(
+            foregroundImage: CachedNetworkImageProvider(photoUrl),
+          ),
         ),
-        const Padding(padding: EdgeInsets.all(5.0)),
+      ],
+    );
+  }
+}
+
+class UserDialog extends StatelessWidget {
+  final User user;
+
+  const UserDialog({super.key, required this.user});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Center(child: Text("User Info")),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text("Signed in as ${user.displayName ?? user.uid}"),
+          Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: "Email: ${user.email} ",
+                ),
+                if (user.emailVerified)
+                  const WidgetSpan(
+                    child: Icon(Icons.verified, size: 14),
+                  ),
+              ],
+            ),
+          ),
+          // Text("Email: ${user.email}"),
+
+          if (user.emailVerified)
+            TextButton.icon(
+              onPressed: () => user.sendEmailVerification(),
+              label: const Text("Verify Email"),
+              icon: const Icon(Icons.verified),
+            ),
+        ],
+      ),
+      alignment: Alignment.topCenter,
+      actionsAlignment: MainAxisAlignment.center,
+      actions: [
+        ElevatedButton.icon(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.close),
+          label: const Text("Close"),
+        ),
+        ElevatedButton.icon(
+          onPressed: () {
+            FirebaseAuth.instance
+                .signOut()
+                .then((value) => Navigator.of(context).pop());
+          },
+          icon: const Icon(Icons.logout),
+          label: const Text("Sign Out"),
+        ),
       ],
     );
   }
