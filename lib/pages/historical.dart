@@ -1,3 +1,4 @@
+import 'package:addictiontracker/app_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -15,14 +16,14 @@ class HistoricalPage extends StatefulWidget {
 class _HistoricalPageState extends State<HistoricalPage> {
   @override
   Widget build(BuildContext context) {
-    var uid = FirebaseAuth.instance.currentUser?.uid;
+    var user = FirebaseAuth.instance.currentUser;
 
-    if (uid == null) {
+    if (user == null) {
       Navigator.of(context).pushReplacementNamed("/sign-in");
       return Container();
     }
 
-    var userData = UserDataHandler(uid: uid);
+    var userData = UserDataHandler(uid: user.uid);
 
     var docs = userData.userCounts.snapshots().map((value) => value.docs);
 
@@ -30,11 +31,8 @@ class _HistoricalPageState extends State<HistoricalPage> {
         stream: docs,
         builder: (ctx, snapshot) {
           if (snapshot.data == null) {
-            return Scaffold(
-              appBar: AppBar(
-                title: const Text("Past Counts"),
-              ),
-              body: const Center(child: Text("Loading Data...")),
+            return const Scaffold(
+              body: Center(child: Text("Loading Data...")),
             );
           }
 
@@ -43,8 +41,9 @@ class _HistoricalPageState extends State<HistoricalPage> {
               parseDate(b.data().date).compareTo(parseDate(a.data().date)));
 
           return Scaffold(
-            appBar: AppBar(
-              title: const Text(title),
+            appBar: AdTracAppBar(
+              title: "Past Counts",
+              user: user,
               actions: [
                 IconButton(
                   onPressed: () {
