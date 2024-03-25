@@ -58,7 +58,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAKt1eAuhdfLMmImpEF8Q6K0ec1Z37C-ZI',
-    appId: '1:640269433885:android:883aff6cd2e118fb249af4',
+    appId: '1:640269433885:android:6ef9c14d122e8ef5249af4',
     messagingSenderId: '640269433885',
     projectId: 'addictiontracker-2f028',
     storageBucket: 'addictiontracker-2f028.appspot.com',
@@ -66,14 +66,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCF2GuKIHnPNWkMgSv2FR6Px10sxJYpWeo',
-    appId: '1:640269433885:ios:26873f687117c919249af4',
+    appId: '1:640269433885:ios:7e49dedf783bbecb249af4',
     messagingSenderId: '640269433885',
     projectId: 'addictiontracker-2f028',
     storageBucket: 'addictiontracker-2f028.appspot.com',
-    androidClientId:
-        '640269433885-kceub8mltee0k6613pls05g8fv4mtgn9.apps.googleusercontent.com',
-    iosClientId:
-        '640269433885-1e5sv9ds7ndf4cv44m3g0c8k0s6jio10.apps.googleusercontent.com',
-    iosBundleId: 'com.jewelexx.vapetracker',
+    androidClientId: '640269433885-7g599v2joonae77pvev7454n4tddgtao.apps.googleusercontent.com',
+    iosClientId: '640269433885-j2sj4gcurj0et3mekn0cuumhlrevp49d.apps.googleusercontent.com',
+    iosBundleId: 'com.jewelexx.adtrac',
   );
 }

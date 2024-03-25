@@ -7,53 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:640269433885:android:883aff6cd2e118fb249af4",
+        "mobilesdk_app_id": "1:640269433885:android:6ef9c14d122e8ef5249af4",
         "android_client_info": {
-          "package_name": "com.jewelexx.vapetracker"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "640269433885-kceub8mltee0k6613pls05g8fv4mtgn9.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.jewelexx.vapetracker",
-            "certificate_hash": "cf60ad32a22a49e761ab77a2aca6a2e98297df58"
-          }
-        },
-        {
-          "client_id": "640269433885-k5i16esafrq392p2r1599u2o06ald3js.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAKt1eAuhdfLMmImpEF8Q6K0ec1Z37C-ZI"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "640269433885-k5i16esafrq392p2r1599u2o06ald3js.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "640269433885-1e5sv9ds7ndf4cv44m3g0c8k0s6jio10.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.jewelexx.vapetracker"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:640269433885:android:f7cf3e3630f4ff27249af4",
-        "android_client_info": {
-          "package_name": "com.maybejules.adtrac"
+          "package_name": "com.jewelexx.adtrac"
         }
       },
       "oauth_client": [
