@@ -81,7 +81,7 @@ class _UserDialogState extends State<UserDialog> {
               ],
             ),
           ),
-          if (user.emailVerified)
+          if (!user.emailVerified)
             TextButton.icon(
               onPressed: _verificationEmailSent
                   ? null
