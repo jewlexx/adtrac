@@ -9,7 +9,6 @@ import 'package:flutter/foundation.dart';
 // import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 // import 'package:file_saver/file_saver.dart';
 // import 'package:share_plus/share_plus.dart';
-import "package:shared_preferences/shared_preferences.dart";
 
 class UserDataHandler {
   final String uid;
@@ -138,27 +137,9 @@ class Counter {
 }
 
 class CounterExport {
-  Map<String, Object> counts = {};
+  Map<String, int> counts;
 
-  CounterExport(SharedPreferences? prefs) {
-    if (prefs != null) {
-      Set<String> keys = prefs.getKeys();
-
-      for (String key in keys) {
-        Object? count = prefs.get(key);
-        counts[key] = count!;
-      }
-    }
-  }
-
-  factory CounterExport.fromJson(Map<String, dynamic> json) {
-    var export = CounterExport(null);
-    for (String key in json.keys) {
-      export.counts[key] = json[key] as int;
-    }
-
-    return export;
-  }
+  CounterExport({this.counts = const {}});
 
   // void share() async {
   //   String jsonString = json.encode(counts);
@@ -202,9 +183,9 @@ class CounterExport {
       File file = result.paths.map((path) => File(path!)).toList()[0];
       var data = await file.readAsBytes();
       var parsedData = data.parseUtf8();
-      Map<String, dynamic> counts = jsonDecode(parsedData);
+      Map<String, int> counts = jsonDecode(parsedData);
 
-      return CounterExport.fromJson(counts);
+      return CounterExport(counts: counts);
     } else {
       return null;
     }
