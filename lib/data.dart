@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:adtrac/widgets/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -52,6 +53,10 @@ class CountDate {
       date: date,
     );
   }
+
+  static Future<CountDate> fromCounter(Counter counter) async {
+    return CountDate(count: await counter.count, date: counter.date);
+  }
 }
 
 class Counter {
@@ -83,6 +88,8 @@ class Counter {
     await docRef.update({
       'count': FieldValue.increment(1),
     });
+
+    await commonUpdate();
   }
 
   Future<void> decrement() async {
@@ -91,6 +98,8 @@ class Counter {
     await docRef.update({
       'count': FieldValue.increment(-1),
     });
+
+    await commonUpdate();
   }
 
   Future<int> get count async {
@@ -123,6 +132,12 @@ class Counter {
 
   Stream<DocumentSnapshot<CountDate>> stream() {
     return docRef.snapshots();
+  }
+
+  Future<void> commonUpdate() async {
+    var countDate = await CountDate.fromCounter(this);
+
+    updateHomeWidget(countDate);
   }
 
   // Future<void> import() async {
