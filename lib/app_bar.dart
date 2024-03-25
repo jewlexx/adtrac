@@ -45,13 +45,22 @@ class AdTracAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-class UserDialog extends StatelessWidget {
+class UserDialog extends StatefulWidget {
   final User user;
 
   const UserDialog({super.key, required this.user});
 
   @override
+  State<UserDialog> createState() => _UserDialogState();
+}
+
+class _UserDialogState extends State<UserDialog> {
+  bool _verificationEmailSent = false;
+
+  @override
   Widget build(BuildContext context) {
+    final user = super.widget.user;
+
     return AlertDialog(
       title: const Center(child: Text("User Info")),
       content: Column(
@@ -72,12 +81,16 @@ class UserDialog extends StatelessWidget {
               ],
             ),
           ),
-          // Text("Email: ${user.email}"),
-
           if (user.emailVerified)
             TextButton.icon(
-              onPressed: () => user.sendEmailVerification(),
-              label: const Text("Verify Email"),
+              onPressed: _verificationEmailSent
+                  ? null
+                  : () => user.sendEmailVerification().then(
+                        (_) => setState(() => _verificationEmailSent = true),
+                      ),
+              label: _verificationEmailSent
+                  ? const Text("Email Sent")
+                  : const Text("Verify Email"),
               icon: const Icon(Icons.verified),
             ),
         ],
@@ -92,9 +105,10 @@ class UserDialog extends StatelessWidget {
         ),
         ElevatedButton.icon(
           onPressed: () {
-            FirebaseAuth.instance
-                .signOut()
-                .then((value) => Navigator.of(context).pop());
+            FirebaseAuth.instance.signOut().then((value) {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushReplacementNamed("/sign-in");
+            });
           },
           icon: const Icon(Icons.logout),
           label: const Text("Sign Out"),
