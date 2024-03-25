@@ -39,7 +39,32 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(useMaterial3: true),
       darkTheme: ThemeData(useMaterial3: true, brightness: Brightness.dark),
       themeMode: ThemeMode.system,
-      routes: routes,
+      // routes: routes,
+      initialRoute: "/",
+      onGenerateRoute: (settings) {
+        final page = routes[settings.name];
+        if (page != null) {
+          return PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => page(null),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) =>
+                    transitionBuilder(animation, child),
+          );
+        }
+
+        return null;
+      },
     );
   }
+}
+
+Widget transitionBuilder(Animation<double> animation, Widget child) {
+  var curve = Curves.ease;
+
+  var tween = Tween(begin: 0.0, end: 1.0).chain(CurveTween(curve: curve));
+
+  return FadeTransition(
+    opacity: animation.drive(tween),
+    child: child,
+  );
 }
