@@ -44,13 +44,27 @@ class _CounterPageState extends State<CounterPage> {
                           "${snapshot.data!.data()?.count ?? 0}",
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            counter.increment();
-                          },
-                          icon: const Icon(Icons.add),
-                          label: const Text("Add"),
-                        )
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                counter.decrement();
+                              },
+                              icon: const Icon(Icons.remove),
+                              label: const Text("Subtract"),
+                            ),
+                            const Padding(padding: EdgeInsets.all(5.0)),
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                counter.increment();
+                              },
+                              icon: const Icon(Icons.add),
+                              label: const Text("Add"),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),

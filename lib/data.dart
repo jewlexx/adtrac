@@ -79,13 +79,23 @@ class Counter {
   }
 
   Future<void> increment() async {
-    int oldCount = await count;
+    await checkOrInit();
 
-    setCount(oldCount + 1);
+    await docRef.update({
+      'count': FieldValue.increment(1),
+    });
+  }
+
+  Future<void> decrement() async {
+    await checkOrInit();
+
+    await docRef.update({
+      'count': FieldValue.increment(-1),
+    });
   }
 
   Future<int> get count async {
-    checkOrInit();
+    await checkOrInit();
 
     final doc = await docRef.get();
     final int? current = doc.data()?.count;
