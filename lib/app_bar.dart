@@ -53,7 +53,7 @@ class AdTracAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final photoUrl = user.photoURL ??
-        'https://api.dicebear.com/8.x/pixel-art/svg?seed=${user.uid}';
+        "https://api.dicebear.com/8.x/pixel-art/svg?seed=${user.uid}";
 
     return AppBar(
       automaticallyImplyLeading: false,
@@ -63,6 +63,7 @@ class AdTracAppBar extends StatelessWidget implements PreferredSizeWidget {
         CircleAvatar(
           foregroundImage: CachedNetworkImageProvider(photoUrl),
         ),
+        const Padding(padding: EdgeInsets.all(5.0)),
       ],
     );
   }
