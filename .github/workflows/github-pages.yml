@@ -33,7 +33,7 @@ jobs:
         with:
           channel: "stable"
       - run: flutter pub get
-      - run: flutter build web --base-href /adtrac
+      - run: flutter build web --base-href "/adtrac/""
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
