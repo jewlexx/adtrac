@@ -8,7 +8,7 @@ import "package:flutter/material.dart";
 import "routes.dart";
 import "firebase_options.dart";
 
-const ENABLE_EMULATORS = false;
+const enableEmulators = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +16,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  if (kDebugMode && ENABLE_EMULATORS) {
+  if (kDebugMode && enableEmulators) {
     try {
       FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8009);
       await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
