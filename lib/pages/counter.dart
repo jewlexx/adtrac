@@ -17,12 +17,12 @@ class _CounterPageState extends State<CounterPage> {
   Widget build(BuildContext context) {
     var user = FirebaseAuth.instance.currentUser;
 
-    if (user == null) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        Navigator.of(context).pushReplacementNamed("/sign-in");
-      });
-      return Container();
-    }
+    // if (user == null) {
+    //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //     Navigator.of(context).pushReplacementNamed("/sign-in");
+    //   });
+    //   return Container();
+    // }
 
     var counter = Counter(userData: UserDataHandler(uid: user.uid));
 

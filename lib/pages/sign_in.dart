@@ -77,6 +77,20 @@ class AuthState extends State<Auth> {
                     child: const Text('Sign In'),
                   ),
                 ),
+                Text("or"),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Signing In')),
+                        );
+                      }
+                    },
+                    child: const Text('Skip'),
+                  ),
+                ),
               ],
             ),
           ),

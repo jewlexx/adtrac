@@ -10,25 +10,43 @@ import 'package:flutter/foundation.dart';
 // import 'package:file_saver/file_saver.dart';
 // import 'package:share_plus/share_plus.dart';
 
-class UserDataHandler {
-  final String uid;
-  late FirebaseFirestore db;
-
-  UserDataHandler({required this.uid}) {
-    db = FirebaseFirestore.instance;
-  }
-
-  DocumentReference<Map<String, dynamic>> get userDoc {
-    return db.collection("users").doc(uid);
-  }
-
-  CollectionReference<CountDate> get userCounts {
-    return userDoc.collection("counts").withConverter<CountDate>(
-          fromFirestore: CountDate.fromFirestore,
-          toFirestore: CountDate.toFirestore,
-        );
-  }
+String currentDate() {
+  DateTime now = DateTime.now();
+  return "${now.year} ${now.month} ${now.day}";
 }
+
+abstract class UserDataHandler {
+  String date;
+
+  UserDataHandler({required this.date});
+
+  Map<String, int> get counts;
+
+  Future<int> getCount();
+  Future<void> setCount(int newCount);
+  Future<void> increment();
+  Future<void> decrement();
+}
+
+// class UserDataHandler {
+//   final String uid;
+//   late FirebaseFirestore db;
+
+//   UserDataHandler({required this.uid}) {
+//     db = FirebaseFirestore.instance;
+//   }
+
+//   DocumentReference<Map<String, dynamic>> get userDoc {
+//     return db.collection("users").doc(uid);
+//   }
+
+//   CollectionReference<CountDate> get userCounts {
+//     return userDoc.collection("counts").withConverter<CountDate>(
+//           fromFirestore: CountDate.fromFirestore,
+//           toFirestore: CountDate.toFirestore,
+//         );
+//   }
+// }
 
 class CountDate {
   int count;
@@ -68,15 +86,6 @@ class Counter {
     checkOrInit();
   }
 
-  DocumentReference<CountDate> get docRef {
-    return userData.userCounts.doc(date);
-  }
-
-  static String currentDate() {
-    DateTime now = DateTime.now();
-    return "${now.year} ${now.month} ${now.day}";
-  }
-
   Future<void> increment() async {
     await checkOrInit();
 
@@ -113,12 +122,6 @@ class Counter {
 
   Future<void> delete() async {
     await docRef.delete();
-  }
-
-  Future<void> checkOrInit() async {
-    if (!(await docRef.get()).exists) {
-      docRef.set(CountDate(count: 0, date: date));
-    }
   }
 
   Stream<DocumentSnapshot<CountDate>> stream() {
