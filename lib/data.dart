@@ -18,7 +18,9 @@ String currentDate() {
 abstract class UserDataHandler {
   String date;
 
-  UserDataHandler({required this.date});
+  UserDataHandler({String? date}) : date = date ?? currentDate();
+
+  Future<void> init() async {}
 
   Future<Map<String, int>> allCounts();
 

@@ -3,12 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseUserData extends UserDataHandler {
   final String uid;
-  late FirebaseFirestore db;
+  FirebaseFirestore db;
 
-  FirebaseUserData({required this.uid, String? date})
-      : super(date: date ?? currentDate()) {
-    db = FirebaseFirestore.instance;
-  }
+  FirebaseUserData({required this.uid, super.date})
+      : db = FirebaseFirestore.instance;
 
   @override
   Future<int> getCount({String? date}) async {
