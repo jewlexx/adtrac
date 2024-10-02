@@ -31,7 +31,7 @@ class _CounterPageState extends State<CounterPage> {
                           "Today's Count:",
                         ),
                         Text(
-                          "${snapshot.data!.data()?.count ?? 0}",
+                          "${snapshot.data?.count ?? 0}",
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                         Row(
