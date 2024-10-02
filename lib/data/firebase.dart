@@ -79,6 +79,11 @@ class FirebaseUserData extends DataProvider {
     );
   }
 
+  @override
+  Future<void> delete() async {
+    await userCounts.doc(date).delete();
+  }
+
   DocumentReference<Map<String, dynamic>> get userDoc {
     return db.collection("users").doc(uid);
   }

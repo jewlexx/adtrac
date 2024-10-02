@@ -56,9 +56,13 @@ class OnDeviceUserData extends DataProvider {
   @override
   Future<void> setCount(int newCount) async {
     await prefs.setInt(dateKey, newCount);
+    await pushStreams();
+  }
 
-    todayStream.add(CountDate(count: newCount, date: date));
-    allCountsStream.add(await allCounts());
+  @override
+  Future<void> delete() async {
+    await prefs.remove(dateKey);
+    await pushStreams();
   }
 
   @override
@@ -69,5 +73,10 @@ class OnDeviceUserData extends DataProvider {
   @override
   Stream<Map<String, int>> streamAll() {
     return allCountsStream.stream;
+  }
+
+  Future<void> pushStreams() async {
+    todayStream.add(CountDate(count: await getCount(), date: date));
+    allCountsStream.add(await allCounts());
   }
 }

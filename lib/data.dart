@@ -30,6 +30,13 @@ abstract class DataProvider {
     }
   }
 
+  static DataProvider defaultWithDate({required String date}) {
+    final provider = getDefault();
+    provider.date = date;
+
+    return provider;
+  }
+
   DataProvider({String? date}) : date = date ?? currentDate();
 
   Future<void> init() async {}
@@ -40,6 +47,8 @@ abstract class DataProvider {
   Future<void> setCount(int newCount);
   Future<void> increment();
   Future<void> decrement();
+
+  Future<void> delete();
 
   Stream<CountDate> stream();
   Stream<Map<String, int>> streamAll();
@@ -71,6 +80,12 @@ class CountDate {
 
   static Map<String, Object?> toFirestore(CountDate data, SetOptions? opts) {
     return {'count': data.count, 'date': data.date};
+  }
+}
+
+extension ToDataProvider on MapEntry<String, int> {
+  DataProvider toUserData() {
+    return DataProvider.defaultWithDate(date: key);
   }
 }
 

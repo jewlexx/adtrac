@@ -24,12 +24,9 @@ class _HistoricalPageState extends State<HistoricalPage> {
     }
 
     var userData = DataProvider.getDefault();
-    final allCounts = userData.allCounts();
-
-    var docs = userData.userCounts.snapshots().map((value) => value.docs);
 
     return StreamBuilder(
-        stream: docs,
+        stream: userData.streamAll(),
         builder: (ctx, snapshot) {
           if (snapshot.data == null) {
             return const Scaffold(
@@ -37,19 +34,17 @@ class _HistoricalPageState extends State<HistoricalPage> {
             );
           }
 
-          var days = snapshot.data!.toList();
-          days.sort((a, b) =>
-              parseDate(b.data().date).compareTo(parseDate(a.data().date)));
+          var days = snapshot.data!.entries.toList();
+          days.sort((a, b) => parseDate(b.key).compareTo(parseDate(a.key)));
 
           return Scaffold(
             appBar: AdTracAppBar(
               title: "Past Counts",
-              user: user,
               actions: [
                 IconButton(
                   onPressed: () {
                     for (var day in days) {
-                      day.data().toCounter().delete();
+                      day.toUserData().delete();
                     }
                   },
                   icon: const Icon(Icons.delete_forever),
