@@ -144,11 +144,10 @@ class CounterExport {
     }
   }
 
-  Future<void> upload(CollectionReference<CountDate> collection) async {
+  Future<void> upload() async {
     for (var date in counts.keys) {
-      await collection
-          .doc(date)
-          .set(CountDate(count: counts[date] as int, date: date));
+      final provider = DataProvider.defaultWithDate(date: date);
+      await provider.setCount(counts[date] as int);
     }
   }
 }

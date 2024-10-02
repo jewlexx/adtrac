@@ -54,7 +54,7 @@ class _HistoricalPageState extends State<HistoricalPage> {
                     var export = (await CounterExport.import());
 
                     if (export != null) {
-                      await export.upload(userData.userCounts);
+                      await export.upload();
                     }
                   },
                   icon: const Icon(Icons.upload),
@@ -72,14 +72,14 @@ class _HistoricalPageState extends State<HistoricalPage> {
                     ListTile(
                       leading: IconButton(
                         onPressed: () {
-                          day.data().toCounter().delete();
+                          day.toUserData().delete();
                         },
                         icon: const Icon(Icons.delete_forever),
                       ),
                       contentPadding:
                           const EdgeInsets.only(left: 100, right: 100),
-                      title: Text(formatDate(parseDate(day.data().date))),
-                      trailing: Text(day.data().count.toString()),
+                      title: Text(formatDate(parseDate(day.key))),
+                      trailing: Text(day.value.toString()),
                     ),
                 ],
               ),
