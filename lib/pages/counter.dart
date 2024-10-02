@@ -39,9 +39,11 @@ class _CounterPageState extends State<CounterPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             ElevatedButton.icon(
-                              onPressed: () {
-                                countData.decrement();
-                              },
+                              onPressed: (snapshot.data?.count ?? 0) > 0
+                                  ? () {
+                                      countData.decrement();
+                                    }
+                                  : null,
                               icon: const Icon(Icons.remove),
                               label: const Text("Subtract"),
                             ),
