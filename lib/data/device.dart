@@ -26,26 +26,29 @@ class OnDeviceUserData extends UserDataHandler {
   }
 
   @override
-  Future<void> decrement() {
-    // TODO: implement decrement
-    throw UnimplementedError();
+  Future<void> increment() async {
+    return setCount(await getCount() + 1);
   }
 
   @override
-  Future<int> getCount() {
-    // TODO: implement getCount
-    throw UnimplementedError();
+  Future<void> decrement() async {
+    await setCount(await getCount() - 1);
   }
 
   @override
-  Future<void> increment() {
-    // TODO: implement increment
-    throw UnimplementedError();
+  Future<int> getCount() async {
+    final currentCount = await prefs.getInt(dateKey);
+
+    if (currentCount == null) {
+      await setCount(0);
+      return 0;
+    } else {
+      return currentCount;
+    }
   }
 
   @override
   Future<void> setCount(int newCount) {
-    // TODO: implement setCount
-    throw UnimplementedError();
+    return prefs.setInt(dateKey, newCount);
   }
 }
