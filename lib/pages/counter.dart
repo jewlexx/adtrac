@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
 
 import '../common.dart';
@@ -15,22 +14,13 @@ class CounterPage extends StatefulWidget {
 class _CounterPageState extends State<CounterPage> {
   @override
   Widget build(BuildContext context) {
-    var user = FirebaseAuth.instance.currentUser;
-
-    // if (user == null) {
-    //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //     Navigator.of(context).pushReplacementNamed("/sign-in");
-    //   });
-    //   return Container();
-    // }
-
-    var counter = Counter(userData: UserDataHandler(uid: user.uid));
+    var counter = Counter(userData: UserDataHandler.getDefault());
 
     return StreamBuilder(
         stream: counter.stream(),
         builder: (ctx, snapshot) {
           return Scaffold(
-            appBar: AdTracAppBar(title: "Today's Count", user: user),
+            appBar: AdTracAppBar(title: "Today's Count"),
             body: snapshot.data == null
                 ? const Center(child: Text('Loading Data...'))
                 : Center(

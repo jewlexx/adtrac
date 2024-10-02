@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 
 class AdTracAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final User user;
   final List<Widget>? actions;
+  final User? user = FirebaseAuth.instance.currentUser;
 
-  const AdTracAppBar({
+  AdTracAppBar({
     super.key,
     required this.title,
-    required this.user,
     this.actions,
   });
 
@@ -46,9 +45,9 @@ class AdTracAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class UserDialog extends StatefulWidget {
-  final User user;
+  final User? user;
 
-  const UserDialog({super.key, required this.user});
+  const UserDialog({super.key, this.user});
 
   @override
   State<UserDialog> createState() => _UserDialogState();
