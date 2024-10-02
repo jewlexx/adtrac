@@ -82,11 +82,7 @@ class AuthState extends State<Auth> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: ElevatedButton(
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Signing In')),
-                        );
-                      }
+                      Navigator.of(context).pushNamed("/");
                     },
                     child: const Text('Skip'),
                   ),
