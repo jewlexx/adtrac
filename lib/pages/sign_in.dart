@@ -77,6 +77,16 @@ class AuthState extends State<Auth> {
                     child: const Text('Sign In'),
                   ),
                 ),
+                Text("or"),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed("/");
+                    },
+                    child: const Text('Skip'),
+                  ),
+                ),
               ],
             ),
           ),

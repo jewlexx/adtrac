@@ -1,129 +1,60 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:adtrac/data/device.dart';
+import 'package:adtrac/data/firebase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 // import 'package:file_picker/file_picker.dart';
 // import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 // import 'package:file_saver/file_saver.dart';
 // import 'package:share_plus/share_plus.dart';
 
-class UserDataHandler {
-  final String uid;
-  late FirebaseFirestore db;
-
-  UserDataHandler({required this.uid}) {
-    db = FirebaseFirestore.instance;
-  }
-
-  DocumentReference<Map<String, dynamic>> get userDoc {
-    return db.collection("users").doc(uid);
-  }
-
-  CollectionReference<CountDate> get userCounts {
-    return userDoc.collection("counts").withConverter<CountDate>(
-          fromFirestore: CountDate.fromFirestore,
-          toFirestore: CountDate.toFirestore,
-        );
-  }
+String currentDate() {
+  DateTime now = DateTime.now();
+  return "${now.year} ${now.month} ${now.day}";
 }
 
-class CountDate {
-  int count;
+abstract class DataProvider {
   String date;
 
-  CountDate({required this.count, required this.date});
+  static DataProvider getDefault() {
+    var user = FirebaseAuth.instance.currentUser;
 
-  CountDate.fromFirestore(
-      DocumentSnapshot<Map<String, dynamic>> data, SnapshotOptions? opts)
-      : this(count: data.get("count"), date: data.get("date"));
-
-  static Map<String, Object?> toFirestore(CountDate data, SetOptions? opts) {
-    return {'count': data.count, 'date': data.date};
-  }
-
-  Counter toCounter() {
-    return Counter(
-      userData: UserDataHandler(
-        uid: FirebaseAuth.instance.currentUser!.uid,
-      ),
-      date: date,
-    );
-  }
-}
-
-class Counter {
-  UserDataHandler userData;
-  late String date;
-
-  Counter({required this.userData, String? date}) {
-    if (date == null) {
-      this.date = currentDate();
+    if (user == null) {
+      return OnDeviceUserData();
     } else {
-      this.date = date;
-    }
-
-    checkOrInit();
-  }
-
-  DocumentReference<CountDate> get docRef {
-    return userData.userCounts.doc(date);
-  }
-
-  static String currentDate() {
-    DateTime now = DateTime.now();
-    return "${now.year} ${now.month} ${now.day}";
-  }
-
-  Future<void> increment() async {
-    await checkOrInit();
-
-    await docRef.update({
-      'count': FieldValue.increment(1),
-    });
-  }
-
-  Future<void> decrement() async {
-    await checkOrInit();
-
-    await docRef.update({
-      'count': FieldValue.increment(-1),
-    });
-  }
-
-  Future<int> get count async {
-    await checkOrInit();
-
-    final doc = await docRef.get();
-    final int? current = doc.data()?.count;
-
-    if (current == null) {
-      setCount(0);
-      return 0;
-    } else {
-      return current;
+      return FirebaseUserData(uid: user.uid);
     }
   }
 
-  Future<void> setCount(int newCount) async {
-    await docRef.update({'count': newCount});
+  static DataProvider defaultWithDate({required String date}) {
+    final provider = getDefault();
+    provider.date = date;
+
+    return provider;
   }
 
-  Future<void> delete() async {
-    await docRef.delete();
-  }
+  DataProvider({String? date}) : date = date ?? currentDate();
 
-  Future<void> checkOrInit() async {
-    if (!(await docRef.get()).exists) {
-      docRef.set(CountDate(count: 0, date: date));
-    }
-  }
+  Future<Map<String, int>> allCounts();
 
-  Stream<DocumentSnapshot<CountDate>> stream() {
-    return docRef.snapshots();
-  }
+  Future<int> getCount();
+  Future<void> setCount(int newCount);
+  Future<void> increment();
+  Future<void> decrement();
+
+  Future<void> delete();
+
+  Stream<CountDate> stream();
+  Stream<Map<String, int>> streamAll();
+
+  // Stream<DocumentSnapshot<CountDate>> stream() {
+  //   return docRef.snapshots();
+  // }
 
   // Future<void> import() async {
   //   CounterExport import = CounterExport(instance);
@@ -134,6 +65,27 @@ class Counter {
   //     });
   //   }
   // }
+}
+
+class CountDate {
+  String date;
+  int count;
+
+  CountDate({required this.count, required this.date});
+
+  CountDate.fromFirestore(
+      DocumentSnapshot<Map<String, dynamic>> data, SnapshotOptions? opts)
+      : this(count: data.get("count"), date: data.get("date"));
+
+  static Map<String, Object?> toFirestore(CountDate data, SetOptions? opts) {
+    return {'count': data.count, 'date': data.date};
+  }
+}
+
+extension ToDataProvider on MapEntry<String, int> {
+  DataProvider toUserData() {
+    return DataProvider.defaultWithDate(date: key);
+  }
 }
 
 class CounterExport {
@@ -191,13 +143,27 @@ class CounterExport {
     }
   }
 
-  Future<void> upload(CollectionReference<CountDate> collection) async {
+  Future<void> upload() async {
     for (var date in counts.keys) {
-      await collection
-          .doc(date)
-          .set(CountDate(count: counts[date] as int, date: date));
+      final provider = DataProvider.defaultWithDate(date: date);
+      await provider.setCount(counts[date] as int);
     }
   }
+}
+
+DateTime parseDate(String date) {
+  List<int> info = date.split(" ").map((part) => int.parse(part)).toList();
+  return DateTime(
+    info[0],
+    info[1],
+    info[2],
+  );
+}
+
+String formatDate(DateTime date) {
+  DateFormat format = DateFormat("yMMMMd");
+
+  return format.format(date);
 }
 
 extension ToUint8List on String {

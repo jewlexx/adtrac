@@ -1,6 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../common.dart';
 import '../app_bar.dart';
@@ -16,19 +14,10 @@ class HistoricalPage extends StatefulWidget {
 class _HistoricalPageState extends State<HistoricalPage> {
   @override
   Widget build(BuildContext context) {
-    var user = FirebaseAuth.instance.currentUser;
-
-    if (user == null) {
-      Navigator.of(context).pushReplacementNamed("/sign-in");
-      return Container();
-    }
-
-    var userData = UserDataHandler(uid: user.uid);
-
-    var docs = userData.userCounts.snapshots().map((value) => value.docs);
+    var userData = DataProvider.getDefault();
 
     return StreamBuilder(
-        stream: docs,
+        stream: userData.streamAll(),
         builder: (ctx, snapshot) {
           if (snapshot.data == null) {
             return const Scaffold(
@@ -36,19 +25,17 @@ class _HistoricalPageState extends State<HistoricalPage> {
             );
           }
 
-          var days = snapshot.data!.toList();
-          days.sort((a, b) =>
-              parseDate(b.data().date).compareTo(parseDate(a.data().date)));
+          var days = snapshot.data!.entries.toList();
+          days.sort((a, b) => parseDate(b.key).compareTo(parseDate(a.key)));
 
           return Scaffold(
             appBar: AdTracAppBar(
               title: "Past Counts",
-              user: user,
               actions: [
                 IconButton(
                   onPressed: () {
                     for (var day in days) {
-                      day.data().toCounter().delete();
+                      day.toUserData().delete();
                     }
                   },
                   icon: const Icon(Icons.delete_forever),
@@ -58,7 +45,7 @@ class _HistoricalPageState extends State<HistoricalPage> {
                     var export = (await CounterExport.import());
 
                     if (export != null) {
-                      await export.upload(userData.userCounts);
+                      await export.upload();
                     }
                   },
                   icon: const Icon(Icons.upload),
@@ -76,14 +63,14 @@ class _HistoricalPageState extends State<HistoricalPage> {
                     ListTile(
                       leading: IconButton(
                         onPressed: () {
-                          day.data().toCounter().delete();
+                          day.toUserData().delete();
                         },
                         icon: const Icon(Icons.delete_forever),
                       ),
                       contentPadding:
                           const EdgeInsets.only(left: 100, right: 100),
-                      title: Text(formatDate(parseDate(day.data().date))),
-                      trailing: Text(day.data().count.toString()),
+                      title: Text(formatDate(parseDate(day.key))),
+                      trailing: Text(day.value.toString()),
                     ),
                 ],
               ),
@@ -92,19 +79,4 @@ class _HistoricalPageState extends State<HistoricalPage> {
           );
         });
   }
-}
-
-DateTime parseDate(String date) {
-  List<int> info = date.split(" ").map((part) => int.parse(part)).toList();
-  return DateTime(
-    info[0],
-    info[1],
-    info[2],
-  );
-}
-
-String formatDate(DateTime date) {
-  DateFormat format = DateFormat("yMMMMd");
-
-  return format.format(date);
 }

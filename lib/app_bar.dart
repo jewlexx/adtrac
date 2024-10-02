@@ -1,16 +1,18 @@
+import 'package:adtrac/user/picture.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
+
+import 'user.dart';
 
 class AdTracAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final User user;
   final List<Widget>? actions;
+  final UserInfo user = UserInfo.fromFirebaseOrDefault();
 
-  const AdTracAppBar({
+  AdTracAppBar({
     super.key,
     required this.title,
-    required this.user,
     this.actions,
   });
 
@@ -19,8 +21,7 @@ class AdTracAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final photoUrl = user.photoURL ??
-        "https://api.dicebear.com/8.x/pixel-art/svg?seed=${user.uid}";
+    final photoUrl = user.photoURL ?? getDefaultPictureUrl(uid: user.uid);
 
     return AppBar(
       automaticallyImplyLeading: false,
@@ -46,7 +47,7 @@ class AdTracAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class UserDialog extends StatefulWidget {
-  final User user;
+  final UserInfo user;
 
   const UserDialog({super.key, required this.user});
 
@@ -67,32 +68,53 @@ class _UserDialogState extends State<UserDialog> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text("Signed in as ${user.displayName ?? user.uid}"),
-          Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: "Email: ${user.email} ",
-                ),
-                if (user.emailVerified)
-                  const WidgetSpan(
-                    child: Icon(Icons.verified, size: 14),
+          ...user.isFirebase()
+              ? [
+                  Text("Signed in as ${user.displayName ?? user.uid}"),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Email: ${user.email} ",
+                        ),
+                        if (user.emailVerified)
+                          const WidgetSpan(
+                            child: Icon(Icons.verified, size: 14),
+                          ),
+                      ],
+                    ),
                   ),
-              ],
-            ),
+                  if (!user.emailVerified && user.isFirebase())
+                    TextButton.icon(
+                      onPressed: _verificationEmailSent
+                          ? null
+                          : () =>
+                              user.toFirebase()!.sendEmailVerification().then(
+                                    (_) => setState(
+                                        () => _verificationEmailSent = true),
+                                  ),
+                      label: _verificationEmailSent
+                          ? const Text("Email Sent")
+                          : const Text("Verify Email"),
+                      icon: const Icon(Icons.verified),
+                    ),
+                ]
+              : [
+                  Text(
+                    "Signed in as local user. Your data will not leave this device.",
+                  ),
+                  Text("You may sign in anytime."),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed("/sign-in");
+                    },
+                    child: const Text("Sign In"),
+                  ),
+                ],
+          Text(
+            "Placeholder profile images from DiceBear under the following license:",
           ),
-          if (!user.emailVerified)
-            TextButton.icon(
-              onPressed: _verificationEmailSent
-                  ? null
-                  : () => user.sendEmailVerification().then(
-                        (_) => setState(() => _verificationEmailSent = true),
-                      ),
-              label: _verificationEmailSent
-                  ? const Text("Email Sent")
-                  : const Text("Verify Email"),
-              icon: const Icon(Icons.verified),
-            ),
+          Text("Thumbs by DiceBear, licensed under CC0 1.0 ."),
         ],
       ),
       alignment: Alignment.topCenter,
