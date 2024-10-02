@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
+
+import 'user.dart';
 
 class AdTracAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final List<Widget>? actions;
-  final User? user = FirebaseAuth.instance.currentUser;
+  final UserInfo user = UserInfo.fromFirebaseOrDefault();
 
   AdTracAppBar({
     super.key,
@@ -45,9 +47,9 @@ class AdTracAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class UserDialog extends StatefulWidget {
-  final User? user;
+  final UserInfo user;
 
-  const UserDialog({super.key, this.user});
+  const UserDialog({super.key, required this.user});
 
   @override
   State<UserDialog> createState() => _UserDialogState();
@@ -80,11 +82,11 @@ class _UserDialogState extends State<UserDialog> {
               ],
             ),
           ),
-          if (!user.emailVerified)
+          if (!user.emailVerified && user.isFirebase())
             TextButton.icon(
               onPressed: _verificationEmailSent
                   ? null
-                  : () => user.sendEmailVerification().then(
+                  : () => user.toFirebase()!.sendEmailVerification().then(
                         (_) => setState(() => _verificationEmailSent = true),
                       ),
               label: _verificationEmailSent
