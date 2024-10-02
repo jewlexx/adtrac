@@ -27,14 +27,14 @@ class FirebaseUserData extends UserDataHandler {
 
   @override
   Future<void> setCount(int newCount) async {
-    await docRef().update({'count': newCount});
+    await docRef.update({'count': newCount});
   }
 
   @override
   Future<void> increment() async {
     await checkOrInit();
 
-    await docRef().update({
+    await docRef.update({
       'count': FieldValue.increment(1),
     });
   }
@@ -43,9 +43,22 @@ class FirebaseUserData extends UserDataHandler {
   Future<void> decrement() async {
     await checkOrInit();
 
-    await docRef().update({
+    await docRef.update({
       'count': FieldValue.increment(-1),
     });
+  }
+
+  @override
+  Future<Map<String, int>> allCounts() async {
+    var counts = await userCounts.get();
+
+    var countsMap = <String, int>{};
+
+    for (var doc in counts.docs) {
+      countsMap[doc.id] = doc.data().count;
+    }
+
+    return countsMap;
   }
 
   DocumentReference<Map<String, dynamic>> get userDoc {
@@ -59,7 +72,7 @@ class FirebaseUserData extends UserDataHandler {
         );
   }
 
-  DocumentReference<CountDate> docRef() {
+  DocumentReference<CountDate> get docRef {
     return userCounts.doc(date);
   }
 

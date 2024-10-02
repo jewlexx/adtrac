@@ -20,7 +20,7 @@ abstract class UserDataHandler {
 
   UserDataHandler({required this.date});
 
-  Map<String, int> get counts;
+  Future<Map<String, int>> allCounts();
 
   Future<int> getCount();
   Future<void> setCount(int newCount);
