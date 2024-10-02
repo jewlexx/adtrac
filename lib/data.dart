@@ -39,8 +39,6 @@ abstract class DataProvider {
 
   DataProvider({String? date}) : date = date ?? currentDate();
 
-  Future<void> init() async {}
-
   Future<Map<String, int>> allCounts();
 
   Future<int> getCount();

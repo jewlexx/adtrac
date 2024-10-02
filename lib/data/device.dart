@@ -15,7 +15,14 @@ class OnDeviceUserData extends DataProvider {
 
   OnDeviceUserData({super.date})
       : prefs = SharedPreferencesAsync(),
-        dateKey = "$datePrefix$date";
+        dateKey = "$datePrefix$date" {
+    init();
+  }
+
+  Future<void> init() async {
+    todayStream.add(CountDate(count: await getCount(), date: date));
+    allCountsStream.add(await allCounts());
+  }
 
   @override
   Future<Map<String, int>> allCounts() async {
