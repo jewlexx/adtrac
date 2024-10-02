@@ -7,6 +7,7 @@ import "package:flutter/material.dart";
 
 import "routes.dart";
 import "firebase_options.dart";
+import "user/picture.dart" as pictures;
 
 const enableEmulators = false;
 
@@ -25,6 +26,8 @@ void main() async {
       print(e);
     }
   }
+
+  pictures.init();
 
   runApp(const MyApp());
 }

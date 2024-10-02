@@ -67,48 +67,55 @@ class _UserDialogState extends State<UserDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
-        children: user.isFirebase()
-            ? [
-                Text("Signed in as ${user.displayName ?? user.uid}"),
-                Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Email: ${user.email} ",
-                      ),
-                      if (user.emailVerified)
-                        const WidgetSpan(
-                          child: Icon(Icons.verified, size: 14),
+        children: [
+          ...user.isFirebase()
+              ? [
+                  Text("Signed in as ${user.displayName ?? user.uid}"),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Email: ${user.email} ",
                         ),
-                    ],
+                        if (user.emailVerified)
+                          const WidgetSpan(
+                            child: Icon(Icons.verified, size: 14),
+                          ),
+                      ],
+                    ),
                   ),
-                ),
-                if (!user.emailVerified && user.isFirebase())
-                  TextButton.icon(
-                    onPressed: _verificationEmailSent
-                        ? null
-                        : () => user.toFirebase()!.sendEmailVerification().then(
-                              (_) =>
-                                  setState(() => _verificationEmailSent = true),
-                            ),
-                    label: _verificationEmailSent
-                        ? const Text("Email Sent")
-                        : const Text("Verify Email"),
-                    icon: const Icon(Icons.verified),
+                  if (!user.emailVerified && user.isFirebase())
+                    TextButton.icon(
+                      onPressed: _verificationEmailSent
+                          ? null
+                          : () =>
+                              user.toFirebase()!.sendEmailVerification().then(
+                                    (_) => setState(
+                                        () => _verificationEmailSent = true),
+                                  ),
+                      label: _verificationEmailSent
+                          ? const Text("Email Sent")
+                          : const Text("Verify Email"),
+                      icon: const Icon(Icons.verified),
+                    ),
+                ]
+              : [
+                  Text(
+                    "Signed in as local user. Your data will not leave this device.",
                   ),
-              ]
-            : [
-                Text(
-                  "Signed in as local user. Your data will not leave this device.",
-                ),
-                Text("You may sign in anytime."),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed("/sign-in");
-                  },
-                  child: const Text("Sign In"),
-                ),
-              ],
+                  Text("You may sign in anytime."),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed("/sign-in");
+                    },
+                    child: const Text("Sign In"),
+                  ),
+                ],
+          Text(
+            "Placeholder profile images from DiceBear under the following license:",
+          ),
+          Text("Thumbs by DiceBear, licensed under CC0 1.0 ."),
+        ],
       ),
       alignment: Alignment.topCenter,
       actionsAlignment: MainAxisAlignment.center,

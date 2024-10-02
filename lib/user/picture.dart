@@ -16,9 +16,7 @@ Future<void> init() async {
 }
 
 String getDefaultPictureUrl({String? uid}) {
-  if (uid == null) {
-    return "https://api.dicebear.com/8.x/pixel-art/png?seed=$uuid";
-  } else {
-    return "https://api.dicebear.com/8.x/pixel-art/png?seed=$uid";
-  }
+  final seed = uid ?? uuid;
+
+  return "https://api.dicebear.com/9.x/thumbs/png?seed=$seed";
 }
