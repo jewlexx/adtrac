@@ -59,6 +59,26 @@ class FirebaseUserData extends DataProvider {
     return countsMap;
   }
 
+  @override
+  Stream<CountDate> stream() {
+    return userCounts.doc(date).snapshots().map((snapshot) => snapshot.data()!);
+  }
+
+  @override
+  Stream<Map<String, int>> streamAll() {
+    return userCounts.snapshots().map(
+      (snapshot) {
+        var counts = <String, int>{};
+
+        for (var doc in snapshot.docs) {
+          counts[doc.id] = doc.data().count;
+        }
+
+        return counts;
+      },
+    );
+  }
+
   DocumentReference<Map<String, dynamic>> get userDoc {
     return db.collection("users").doc(uid);
   }

@@ -41,6 +41,9 @@ abstract class DataProvider {
   Future<void> increment();
   Future<void> decrement();
 
+  Stream<CountDate> stream();
+  Stream<Map<String, int>> streamAll();
+
   // Stream<DocumentSnapshot<CountDate>> stream() {
   //   return docRef.snapshots();
   // }
@@ -57,8 +60,8 @@ abstract class DataProvider {
 }
 
 class CountDate {
-  int count;
   String date;
+  int count;
 
   CountDate({required this.count, required this.date});
 
