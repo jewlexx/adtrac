@@ -7,21 +7,22 @@ const String datePrefix = "counts:";
 
 class OnDeviceUserData extends DataProvider {
   final SharedPreferencesAsync prefs;
-  final String dateKey;
+  late String dateKey;
 
   final StreamController<CountDate> todayStream = StreamController.broadcast();
   final StreamController<Map<String, int>> allCountsStream =
       StreamController.broadcast();
 
-  OnDeviceUserData({super.date})
-      : prefs = SharedPreferencesAsync(),
-        dateKey = "$datePrefix$date" {
+  OnDeviceUserData({super.date}) : prefs = SharedPreferencesAsync() {
+    dateKey = "$datePrefix$date";
     init();
   }
 
   Future<void> init() async {
-    todayStream.add(CountDate(count: await getCount(), date: date));
-    allCountsStream.add(await allCounts());
+    await pushStreams();
+
+    todayStream.onListen = pushTodayStream;
+    allCountsStream.onListen = pushAllCountsStream;
   }
 
   @override
@@ -29,7 +30,18 @@ class OnDeviceUserData extends DataProvider {
     var allCounts = <String, int>{};
 
     final keys = await prefs.getKeys();
-    final dateKeys = keys.where((key) => key.startsWith("$datePrefix$date"));
+    final dateKeys = keys.where((key) {
+      if (!key.startsWith(datePrefix)) {
+        return false;
+      }
+
+      try {
+        parseDate(key.split(":")[1]);
+        return true;
+      } catch (_) {
+        return false;
+      }
+    });
 
     Future.forEach(dateKeys, (key) async {
       allCounts[key.split(":")[1]] = (await prefs.getInt(key))!;
@@ -83,7 +95,15 @@ class OnDeviceUserData extends DataProvider {
   }
 
   Future<void> pushStreams() async {
+    pushTodayStream();
+    pushAllCountsStream();
+  }
+
+  Future<void> pushTodayStream() async {
     todayStream.add(CountDate(count: await getCount(), date: date));
+  }
+
+  Future<void> pushAllCountsStream() async {
     allCountsStream.add(await allCounts());
   }
 }

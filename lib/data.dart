@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 // import 'package:file_picker/file_picker.dart';
 // import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 // import 'package:file_saver/file_saver.dart';
@@ -148,6 +149,21 @@ class CounterExport {
       await provider.setCount(counts[date] as int);
     }
   }
+}
+
+DateTime parseDate(String date) {
+  List<int> info = date.split(" ").map((part) => int.parse(part)).toList();
+  return DateTime(
+    info[0],
+    info[1],
+    info[2],
+  );
+}
+
+String formatDate(DateTime date) {
+  DateFormat format = DateFormat("yMMMMd");
+
+  return format.format(date);
 }
 
 extension ToUint8List on String {

@@ -1,6 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../common.dart';
 import '../app_bar.dart';
@@ -16,13 +14,6 @@ class HistoricalPage extends StatefulWidget {
 class _HistoricalPageState extends State<HistoricalPage> {
   @override
   Widget build(BuildContext context) {
-    var user = FirebaseAuth.instance.currentUser;
-
-    if (user == null) {
-      Navigator.of(context).pushReplacementNamed("/sign-in");
-      return Container();
-    }
-
     var userData = DataProvider.getDefault();
 
     return StreamBuilder(
@@ -88,19 +79,4 @@ class _HistoricalPageState extends State<HistoricalPage> {
           );
         });
   }
-}
-
-DateTime parseDate(String date) {
-  List<int> info = date.split(" ").map((part) => int.parse(part)).toList();
-  return DateTime(
-    info[0],
-    info[1],
-    info[2],
-  );
-}
-
-String formatDate(DateTime date) {
-  DateFormat format = DateFormat("yMMMMd");
-
-  return format.format(date);
 }
