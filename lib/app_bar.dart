@@ -69,18 +69,6 @@ class _UserDialogState extends State<UserDialog> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: user.isFirebase()
             ? [
-                Text(
-                  "Signed in as local user. Your data will not leave this device.",
-                ),
-                Text("You may sign in anytime."),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed("/sign-in");
-                  },
-                  child: const Text("Sign In"),
-                ),
-              ]
-            : [
                 Text("Signed in as ${user.displayName ?? user.uid}"),
                 Text.rich(
                   TextSpan(
@@ -108,6 +96,18 @@ class _UserDialogState extends State<UserDialog> {
                         : const Text("Verify Email"),
                     icon: const Icon(Icons.verified),
                   ),
+              ]
+            : [
+                Text(
+                  "Signed in as local user. Your data will not leave this device.",
+                ),
+                Text("You may sign in anytime."),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed("/sign-in");
+                  },
+                  child: const Text("Sign In"),
+                ),
               ],
       ),
       alignment: Alignment.topCenter,
