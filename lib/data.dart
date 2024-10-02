@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:adtrac/data/device.dart';
+import 'package:adtrac/data/firebase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +19,16 @@ String currentDate() {
 
 abstract class UserDataHandler {
   String date;
+
+  static UserDataHandler getDefault() {
+    var user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      return OnDeviceUserData();
+    } else {
+      return FirebaseUserData(uid: user.uid);
+    }
+  }
 
   UserDataHandler({String? date}) : date = date ?? currentDate();
 
@@ -66,9 +78,7 @@ class CountDate {
 
   Counter toCounter() {
     return Counter(
-      userData: UserDataHandler(
-        uid: FirebaseAuth.instance.currentUser!.uid,
-      ),
+      userData: UserDataHandler.getDefault(),
       date: date,
     );
   }
@@ -84,51 +94,11 @@ class Counter {
     } else {
       this.date = date;
     }
-
-    checkOrInit();
   }
 
-  Future<void> increment() async {
-    await checkOrInit();
-
-    await docRef.update({
-      'count': FieldValue.increment(1),
-    });
-  }
-
-  Future<void> decrement() async {
-    await checkOrInit();
-
-    await docRef.update({
-      'count': FieldValue.increment(-1),
-    });
-  }
-
-  Future<int> get count async {
-    await checkOrInit();
-
-    final doc = await docRef.get();
-    final int? current = doc.data()?.count;
-
-    if (current == null) {
-      setCount(0);
-      return 0;
-    } else {
-      return current;
-    }
-  }
-
-  Future<void> setCount(int newCount) async {
-    await docRef.update({'count': newCount});
-  }
-
-  Future<void> delete() async {
-    await docRef.delete();
-  }
-
-  Stream<DocumentSnapshot<CountDate>> stream() {
-    return docRef.snapshots();
-  }
+  // Stream<DocumentSnapshot<CountDate>> stream() {
+  //   return docRef.snapshots();
+  // }
 
   // Future<void> import() async {
   //   CounterExport import = CounterExport(instance);
