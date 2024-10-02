@@ -1,3 +1,4 @@
+import 'package:adtrac/user/picture.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class UserInfo {
@@ -42,7 +43,7 @@ class UserInfo {
   factory UserInfo.defaultUser() {
     return UserInfo(
       uid: "default",
-      photoURL: "https://api.dicebear.com/8.x/pixel-art/svg?seed=default",
+      photoURL: getDefaultPictureUrl(),
       displayName: "Default User",
       email: "default@example.com",
       emailVerified: true,

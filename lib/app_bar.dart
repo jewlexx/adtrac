@@ -1,3 +1,4 @@
+import 'package:adtrac/user/picture.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
@@ -20,8 +21,7 @@ class AdTracAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final photoUrl = user.photoURL ??
-        "https://api.dicebear.com/8.x/pixel-art/png?seed=${user.uid}";
+    final photoUrl = user.photoURL ?? getDefaultPictureUrl(uid: user.uid);
 
     return AppBar(
       automaticallyImplyLeading: false,
