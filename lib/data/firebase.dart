@@ -1,7 +1,7 @@
 import 'package:adtrac/data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class FirebaseUserData extends UserDataHandler {
+class FirebaseUserData extends DataProvider {
   final String uid;
   FirebaseFirestore db;
 

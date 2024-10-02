@@ -23,7 +23,8 @@ class _HistoricalPageState extends State<HistoricalPage> {
       return Container();
     }
 
-    var userData = UserDataHandler(uid: user.uid);
+    var userData = DataProvider.getDefault();
+    final allCounts = userData.allCounts();
 
     var docs = userData.userCounts.snapshots().map((value) => value.docs);
 

@@ -14,10 +14,10 @@ class CounterPage extends StatefulWidget {
 class _CounterPageState extends State<CounterPage> {
   @override
   Widget build(BuildContext context) {
-    var counter = Counter(userData: UserDataHandler.getDefault());
+    var countData = DataProvider.getDefault();
 
     return StreamBuilder(
-        stream: counter.stream(),
+        stream: countData.stream(),
         builder: (ctx, snapshot) {
           return Scaffold(
             appBar: AdTracAppBar(title: "Today's Count"),
@@ -40,7 +40,7 @@ class _CounterPageState extends State<CounterPage> {
                           children: [
                             ElevatedButton.icon(
                               onPressed: () {
-                                counter.decrement();
+                                countData.decrement();
                               },
                               icon: const Icon(Icons.remove),
                               label: const Text("Subtract"),
@@ -48,7 +48,7 @@ class _CounterPageState extends State<CounterPage> {
                             const Padding(padding: EdgeInsets.all(5.0)),
                             ElevatedButton.icon(
                               onPressed: () {
-                                counter.increment();
+                                countData.increment();
                               },
                               icon: const Icon(Icons.add),
                               label: const Text("Add"),

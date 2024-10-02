@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const String datePrefix = "counts:";
 
-class OnDeviceUserData extends UserDataHandler {
+class OnDeviceUserData extends DataProvider {
   final SharedPreferencesAsync prefs;
   final String dateKey;
 

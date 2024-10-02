@@ -17,10 +17,10 @@ String currentDate() {
   return "${now.year} ${now.month} ${now.day}";
 }
 
-abstract class UserDataHandler {
+abstract class DataProvider {
   String date;
 
-  static UserDataHandler getDefault() {
+  static DataProvider getDefault() {
     var user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
@@ -30,7 +30,7 @@ abstract class UserDataHandler {
     }
   }
 
-  UserDataHandler({String? date}) : date = date ?? currentDate();
+  DataProvider({String? date}) : date = date ?? currentDate();
 
   Future<void> init() async {}
 
@@ -40,61 +40,6 @@ abstract class UserDataHandler {
   Future<void> setCount(int newCount);
   Future<void> increment();
   Future<void> decrement();
-}
-
-// class UserDataHandler {
-//   final String uid;
-//   late FirebaseFirestore db;
-
-//   UserDataHandler({required this.uid}) {
-//     db = FirebaseFirestore.instance;
-//   }
-
-//   DocumentReference<Map<String, dynamic>> get userDoc {
-//     return db.collection("users").doc(uid);
-//   }
-
-//   CollectionReference<CountDate> get userCounts {
-//     return userDoc.collection("counts").withConverter<CountDate>(
-//           fromFirestore: CountDate.fromFirestore,
-//           toFirestore: CountDate.toFirestore,
-//         );
-//   }
-// }
-
-class CountDate {
-  int count;
-  String date;
-
-  CountDate({required this.count, required this.date});
-
-  CountDate.fromFirestore(
-      DocumentSnapshot<Map<String, dynamic>> data, SnapshotOptions? opts)
-      : this(count: data.get("count"), date: data.get("date"));
-
-  static Map<String, Object?> toFirestore(CountDate data, SetOptions? opts) {
-    return {'count': data.count, 'date': data.date};
-  }
-
-  Counter toCounter() {
-    return Counter(
-      userData: UserDataHandler.getDefault(),
-      date: date,
-    );
-  }
-}
-
-class Counter {
-  UserDataHandler userData;
-  late String date;
-
-  Counter({required this.userData, String? date}) {
-    if (date == null) {
-      this.date = currentDate();
-    } else {
-      this.date = date;
-    }
-  }
 
   // Stream<DocumentSnapshot<CountDate>> stream() {
   //   return docRef.snapshots();
@@ -109,6 +54,21 @@ class Counter {
   //     });
   //   }
   // }
+}
+
+class CountDate {
+  int count;
+  String date;
+
+  CountDate({required this.count, required this.date});
+
+  CountDate.fromFirestore(
+      DocumentSnapshot<Map<String, dynamic>> data, SnapshotOptions? opts)
+      : this(count: data.get("count"), date: data.get("date"));
+
+  static Map<String, Object?> toFirestore(CountDate data, SetOptions? opts) {
+    return {'count': data.count, 'date': data.date};
+  }
 }
 
 class CounterExport {
